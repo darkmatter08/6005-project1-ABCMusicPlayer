@@ -57,7 +57,6 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('C').toMidiNote(), 168, 24);
             
             System.out.println(player);
-
             player.play();
 
         } catch (MidiUnavailableException e) {
@@ -127,20 +126,7 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('B').toMidiNote(), 270, 9);
             
             System.out.println(player);
-
-            // play!
             player.play();
-
-            /*
-             * Note: A possible weird behavior of the Java sequencer: Even if the
-             * sequencer has finished playing all of the scheduled notes and is
-             * manually closed, the program may not terminate. This is likely
-             * due to daemon threads that are spawned when the sequencer is
-             * opened but keep on running even after the sequencer is killed. In
-             * this case, you need to explicitly exit the program with
-             * System.exit(0).
-             */
-            // System.exit(0);
 
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
@@ -151,6 +137,71 @@ public class SequencePlayerTest {
 	
 	@Test
 	public void pieceThreeTest() {
-		
+		SequencePlayer player;
+        try {
+            // quarter note = 100 BPM, 2 ticks/beat
+        	// a LyricListener that prints each lyric that it sees.
+            LyricListener listener = new LyricListener() {
+                public void processLyricEvent(String text) {
+                    System.out.println(text);
+                }
+            };
+        	player = new SequencePlayer(100, 2, listener);
+            
+            //bar 1
+            // Rest (0, 4)
+            player.addNote(new Pitch('D').toMidiNote(), 4, 2);
+            player.addLyricEvent("A", 4);
+            
+            //bar 2
+            player.addNote(new Pitch('G').toMidiNote(), 6, 4);
+            player.addLyricEvent("ma", 6);
+            player.addNote(new Pitch('B').toMidiNote(), 10, 1);
+            player.addLyricEvent("zing", 10);
+            player.addNote(new Pitch('G').toMidiNote(), 11, 1);
+            
+            //bar 3
+            player.addNote(new Pitch('B').toMidiNote(), 12, 4);
+            player.addLyricEvent("grace!", 12);
+            player.addNote(new Pitch('A').toMidiNote(), 16, 2);
+            player.addLyricEvent("How", 16);
+            
+            //bar 4
+            player.addNote(new Pitch('G').toMidiNote(), 18, 4);
+            player.addLyricEvent("sweet", 18);
+            player.addNote(new Pitch('E').toMidiNote(), 22, 2);
+            player.addLyricEvent("the", 22);
+            
+            //bar 5
+            player.addNote(new Pitch('D').toMidiNote(), 24, 4);
+            player.addLyricEvent("sound", 24);
+            player.addNote(new Pitch('D').toMidiNote(), 28, 2);
+            player.addLyricEvent("That", 28);
+            
+            //bar 6
+            player.addNote(new Pitch('G').toMidiNote(), 30, 4);
+            player.addLyricEvent("saved", 30);
+            player.addNote(new Pitch('B').toMidiNote(), 34, 1);
+            player.addLyricEvent("a", 34);
+            player.addNote(new Pitch('G').toMidiNote(), 35, 1);
+            
+            //bar 7
+            player.addNote(new Pitch('B').toMidiNote(), 36, 4);
+            player.addLyricEvent("wretch", 36);
+            player.addNote(new Pitch('A').toMidiNote(), 40, 2);
+            player.addLyricEvent("like", 40);
+            
+            //bar 8-9
+            player.addNote(new Pitch('D').transpose(Pitch.OCTAVE).toMidiNote(), 42, 8);
+            player.addLyricEvent("me.", 42);
+            
+            System.out.println(player);
+            player.play();
+
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
 	}
 }
