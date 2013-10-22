@@ -13,7 +13,7 @@ import java.util.List;
  */
 public final class KeySignatureUtility {
 	
-	private final Map<KeySignature, Map<Pitch, Integer>> KEYSIG = 
+	private static final Map<KeySignature, Map<Pitch, Integer>> KEYSIG = 
 			makeMap();
 	
 	/**
@@ -21,7 +21,7 @@ public final class KeySignatureUtility {
 	 * Major and Minor keys
 	 * @return
 	 */
-	private Map<KeySignature, Map<Pitch, Integer>> makeMap(){
+	private static Map<KeySignature, Map<Pitch, Integer>> makeMap(){
 		Map<KeySignature, Map<Pitch, Integer>> keySigMap = 
 				new HashMap<KeySignature, Map<Pitch, Integer>>();
 		
@@ -107,7 +107,7 @@ public final class KeySignatureUtility {
 	 * @param isSharp
 	 * @param keySig
 	 */
-	private void addKey(KeySignature scale, List<Character> keys, boolean isSharp, Map<KeySignature, Map<Pitch, Integer>> keySig){
+	private static void addKey(KeySignature scale, List<Character> keys, boolean isSharp, Map<KeySignature, Map<Pitch, Integer>> keySig){
 		Map<Pitch, Integer> newScale = new HashMap<Pitch, Integer>();
 		for(Character key: keys){
 			int adjustment = 1;
@@ -125,7 +125,7 @@ public final class KeySignatureUtility {
 	 * @param rawPitch The Pitch that a keySignature is applied to.
 	 * @return a Pitch that is adjusted according to the keySignature
 	 */
-	public Pitch getAdjustedPitch(KeySignature s, Pitch rawPitch){
+	public static Pitch getAdjustedPitch(KeySignature s, Pitch rawPitch){
 		assert KEYSIG.containsKey(s);
 		int adjustment = KEYSIG.get(s).get(rawPitch);
 		Pitch adjustedPitch = rawPitch.accidentalTranspose(adjustment);
