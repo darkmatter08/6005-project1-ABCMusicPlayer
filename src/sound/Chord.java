@@ -12,6 +12,10 @@ public class Chord implements Sequence{
 		this.atoms =  new ArrayList<MusicalAtom>();
 	}
 	
+	public void addAtom(MusicalAtom atom){
+		this.atoms.add(atom);
+	}
+	
 	@Override
 	public Pair<Integer, Integer> getShortestLength() {
 		// TODO Auto-generated method stub
@@ -22,11 +26,6 @@ public class Chord implements Sequence{
 	public List<MusicalAtom> getSequence() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-
-	public void addAtom(MusicalAtom atom){
-		
 	}
 	
 

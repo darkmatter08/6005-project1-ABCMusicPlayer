@@ -2,13 +2,11 @@ package sound;
 
 import java.util.Map;
 
-import org.antlr.v4.runtime.misc.Pair;
-
 public abstract class MusicalAtom {
 	private Pitch pitch;
-	private Pair<Integer, Integer> lengthCoeff;
+	private IntPair lengthCoeff;
 
-	public Pair<Integer, Integer> getLength(){
+	public IntPair getLength(){
 		return this.lengthCoeff;
 	};
 	public void setAccidental(Map<Integer, Integer> accidentals){
