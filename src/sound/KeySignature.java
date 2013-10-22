@@ -16,6 +16,6 @@ public enum KeySignature {
 	// Sharp Keys
 	Am, Em, Bm, Fsm, Csm, Gsm, Dsm,
 	// Flat Keys
-	Fm, Bbm, Ebm, Abm, Dbm, Gbm
+	Dm, Gm, Cm, Fm, Bbm, Ebm
 	
 }

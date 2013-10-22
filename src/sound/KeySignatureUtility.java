@@ -22,67 +22,79 @@ public final class KeySignatureUtility {
 	 * @return
 	 */
 	private Map<KeySignature, Map<Pitch, Integer>> makeMap(){
-		Map<KeySignature, Map<Pitch, Integer>> keySigMap = new HashMap<KeySignature, Map<Pitch, Integer>>();
+		Map<KeySignature, Map<Pitch, Integer>> keySigMap = 
+				new HashMap<KeySignature, Map<Pitch, Integer>>();
 		
-		// MAJOR KEYS
-		
-		// SHARP KEYS - C, G, D, A, E, B, F#
+		// MAJOR SHARP KEYS - C, G, D, A, E, B, F#
 		// Order of sharps - F C G D A E B
 		List<Character> sharpKey = new ArrayList<Character>();
-		// C Major
+		// C Major - A Minor
 		addKey(KeySignature.C, sharpKey, true, keySigMap);
+		addKey(KeySignature.Am, sharpKey, true, keySigMap);
 		
-		// G Major
+		// G Major - E Minor
 		sharpKey.add('F');
 		addKey(KeySignature.G, sharpKey, true, keySigMap);
+		addKey(KeySignature.Em, sharpKey, true, keySigMap);
 		
-		// D Major
+		// D Major - B Minor
 		sharpKey.add('C');
 		addKey(KeySignature.D, sharpKey, true, keySigMap);
+		addKey(KeySignature.Bm, sharpKey, true, keySigMap);
 		
-		// A Major
+		// A Major - F# Minor
 		sharpKey.add('G');
 		addKey(KeySignature.A, sharpKey, true, keySigMap);
+		addKey(KeySignature.Fsm, sharpKey, true, keySigMap);
 		
-		// E Major
+		// E Major - C# Minor
 		sharpKey.add('D');
 		addKey(KeySignature.E, sharpKey, true, keySigMap);
+		addKey(KeySignature.Csm, sharpKey, true, keySigMap);
 		
-		// B Major
+		// B Major - G# Minor
 		sharpKey.add('A');
 		addKey(KeySignature.B, sharpKey, true, keySigMap);
+		addKey(KeySignature.Gsm, sharpKey, true, keySigMap);
 		
-		// F# Major
+		// F# Major - D# Minor
 		sharpKey.add('E');
 		addKey(KeySignature.Fs, sharpKey, true, keySigMap);
+		addKey(KeySignature.Dsm, sharpKey, true, keySigMap);
 		
-		// FLAT KEYS - F, Bb, Eb, Ab, Db, Gb
+		// MAJOR FLAT KEYS - F, Bb, Eb, Ab, Db, Gb
 		// Order of flats - B E A D G C F
 		List<Character> flatKey = new ArrayList<Character>();
 		
-		// F Major
+		// F Major - D Minor
 		flatKey.add('B');
 		addKey(KeySignature.F, flatKey, false, keySigMap);
+		addKey(KeySignature.Dm, flatKey, false, keySigMap);
 		
-		// Bb Major
+		// Bb Major - G Minor
 		flatKey.add('E');
 		addKey(KeySignature.Bb, flatKey, false, keySigMap);
+		addKey(KeySignature.Gm, flatKey, false, keySigMap);
 		
-		// Eb Major
+		// Eb Major - C Minor
 		flatKey.add('A');
 		addKey(KeySignature.Eb, flatKey, false, keySigMap);
+		addKey(KeySignature.Cm, flatKey, false, keySigMap);
 		
-		// Ab Major
+		// Ab Major - F Minor
 		flatKey.add('D');
 		addKey(KeySignature.Ab, flatKey, false, keySigMap);
+		addKey(KeySignature.Fm, flatKey, false, keySigMap);
 		
-		// Db Major
+		// Db Major - Bb Minor
 		flatKey.add('G');
 		addKey(KeySignature.Db, flatKey, false, keySigMap);
+		addKey(KeySignature.Bbm, flatKey, false, keySigMap);
 		
-		// Gb Major
+		// Gb Major - Eb Minor
 		flatKey.add('C');
 		addKey(KeySignature.Gb, flatKey, false, keySigMap);
+		addKey(KeySignature.Ebm, flatKey, false, keySigMap);
 		
 		return keySigMap;
 	}
