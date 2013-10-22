@@ -13,7 +13,7 @@ import java.util.List;
  */
 public final class KeySignatureUtility {
 	
-	private final Map<String, Map<Pitch, Integer>> KEYSIG = 
+	private final Map<KeySignature, Map<Pitch, Integer>> KEYSIG = 
 			makeMap();
 	
 	/**
@@ -21,8 +21,8 @@ public final class KeySignatureUtility {
 	 * Major and Minor keys
 	 * @return
 	 */
-	private Map<String, Map<Pitch, Integer>> makeMap(){
-		Map<String, Map<Pitch, Integer>> keySigMap = new HashMap<String, Map<Pitch, Integer>>();
+	private Map<KeySignature, Map<Pitch, Integer>> makeMap(){
+		Map<KeySignature, Map<Pitch, Integer>> keySigMap = new HashMap<KeySignature, Map<Pitch, Integer>>();
 		
 		// MAJOR KEYS
 		
@@ -30,31 +30,31 @@ public final class KeySignatureUtility {
 		// Order of sharps - F C G D A E B
 		List<Character> sharpKey = new ArrayList<Character>();
 		// C Major
-		addKey("C", sharpKey, true, keySigMap);
+		addKey(KeySignature.C, sharpKey, true, keySigMap);
 		
 		// G Major
 		sharpKey.add('F');
-		addKey("G", sharpKey, true, keySigMap);
+		addKey(KeySignature.G, sharpKey, true, keySigMap);
 		
 		// D Major
 		sharpKey.add('C');
-		addKey("D", sharpKey, true, keySigMap);
+		addKey(KeySignature.D, sharpKey, true, keySigMap);
 		
 		// A Major
 		sharpKey.add('G');
-		addKey("A", sharpKey, true, keySigMap);
+		addKey(KeySignature.A, sharpKey, true, keySigMap);
 		
 		// E Major
 		sharpKey.add('D');
-		addKey("E", sharpKey, true, keySigMap);
+		addKey(KeySignature.E, sharpKey, true, keySigMap);
 		
 		// B Major
 		sharpKey.add('A');
-		addKey("B", sharpKey, true, keySigMap);
+		addKey(KeySignature.B, sharpKey, true, keySigMap);
 		
 		// F# Major
 		sharpKey.add('E');
-		addKey("F#", sharpKey, true, keySigMap);
+		addKey(KeySignature.Fs, sharpKey, true, keySigMap);
 		
 		// FLAT KEYS - F, Bb, Eb, Ab, Db, Gb
 		// Order of flats - B E A D G C F
@@ -62,27 +62,27 @@ public final class KeySignatureUtility {
 		
 		// F Major
 		flatKey.add('B');
-		addKey("F", flatKey, false, keySigMap);
+		addKey(KeySignature.F, flatKey, false, keySigMap);
 		
 		// Bb Major
 		flatKey.add('E');
-		addKey("Bb", flatKey, false, keySigMap);
+		addKey(KeySignature.Bb, flatKey, false, keySigMap);
 		
 		// Eb Major
 		flatKey.add('A');
-		addKey("Eb", flatKey, false, keySigMap);
+		addKey(KeySignature.Eb, flatKey, false, keySigMap);
 		
 		// Ab Major
 		flatKey.add('D');
-		addKey("Ab", flatKey, false, keySigMap);
+		addKey(KeySignature.Ab, flatKey, false, keySigMap);
 		
 		// Db Major
 		flatKey.add('G');
-		addKey("Db", flatKey, false, keySigMap);
+		addKey(KeySignature.Db, flatKey, false, keySigMap);
 		
 		// Gb Major
 		flatKey.add('C');
-		addKey("Gb", flatKey, false, keySigMap);
+		addKey(KeySignature.Gb, flatKey, false, keySigMap);
 		
 		return keySigMap;
 	}
@@ -90,12 +90,12 @@ public final class KeySignatureUtility {
 	/**
 	 * Helper method that constructs a Map<Pitch, Integer> from keys, putting the
 	 * result in keySig with they key being scale. 
-	 * @param scale The scale that is the key to the value of the new Map
+	 * @param scale The KeySignature that is the key to the value of the new Map
 	 * @param keys
 	 * @param isSharp
 	 * @param keySig
 	 */
-	private void addKey(String scale, List<Character> keys, boolean isSharp, Map<String, Map<Pitch, Integer>> keySig){
+	private void addKey(KeySignature scale, List<Character> keys, boolean isSharp, Map<KeySignature, Map<Pitch, Integer>> keySig){
 		Map<Pitch, Integer> newScale = new HashMap<Pitch, Integer>();
 		for(Character key: keys){
 			int adjustment = 1;
@@ -106,8 +106,18 @@ public final class KeySignatureUtility {
 		keySig.put(scale, newScale);
 	}
 	
+	/**
+	 * Allows you to get a new Pitch that is adjusted according to 
+	 * the KeySignature s.
+	 * @param s The KeySignature you are applying to the rawPitch
+	 * @param rawPitch The Pitch that a keySignature is applied to.
+	 * @return a Pitch that is adjusted according to the keySignature
+	 */
 	public Pitch getAdjustedPitch(KeySignature s, Pitch rawPitch){
-		return null;
+		assert KEYSIG.containsKey(s);
+		int adjustment = KEYSIG.get(s).get(rawPitch);
+		Pitch adjustedPitch = rawPitch.accidentalTranspose(adjustment);
+		return adjustedPitch;
 	}
 }
 
