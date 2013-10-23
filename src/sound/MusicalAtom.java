@@ -16,7 +16,9 @@ public abstract class MusicalAtom {
 				}		
 	};
 	public void setLyrics(String syllableLyric){};
-	
+	public Pitch getPitch(){
+		return this.pitch;
+	}
 
 //	@Override 
 //	public boolean equals(Object that){

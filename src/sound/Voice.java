@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.misc.Pair;
-
 public class Voice implements Sequence {
 
 	private final List<Chord> chords;
 	private final Map <Integer, Integer> accidentals; // This store a dictionary with note as key and it the associated accidental as the value 
-	
+	private IntPair shortestLength;
 	public Voice() {
 		this.chords = new ArrayList<Chord>();
 		this.accidentals = new HashMap<Integer, Integer>();
@@ -23,18 +21,32 @@ public class Voice implements Sequence {
 	}
 	public void addChord(Chord chord){
 		this.chords.add(chord);
+		if (this.chords.size() == 1){
+			this.shortestLength = chord.getShortestLength();
+		}
+		else{
+			if (chord.getShortestLength().value < this.shortestLength.value){
+				this.shortestLength = chord.getShortestLength();
+			}
+		}
 		
 	} // This will take a chord and add it to the chords
 	@Override
-	public Pair<Integer, Integer> getShortestLength() {
+	public IntPair getShortestLength() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.shortestLength;
 	}
 
 	@Override
 	public List<MusicalAtom> getSequence() {
 		// TODO Auto-generated method stub
-		return null;
+		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
+		for (Chord chord: this.chords){
+			for (MusicalAtom atom: chord.getSequence()){
+				sequence.add(atom);
+			}
+		}
+		return sequence;
 	}
 // TODO implement equals and hashCode
 //	@Override 

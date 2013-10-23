@@ -42,10 +42,10 @@ public class ASTtests {
 	@Test
 	public void playNotes(){
 		testNote testNote = new testNote();
-		int start = 40;
+		int start = 4;
 		for (Note note : testNote.noteList ){
-			start = start + 50;
-			testNote.player.addNote(note.getPitch().toMidiNote(), start, start + 100);
+			testNote.player.addNote(note.getPitch().toMidiNote(), start, start + 15);
+			start = start + 15;
 		}
 		try {
 			testNote.player.play();
