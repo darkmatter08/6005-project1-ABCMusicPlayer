@@ -2,13 +2,11 @@ package sound;
 
 import java.util.Map;
 
-import org.antlr.v4.runtime.misc.Pair;
-
 public abstract class MusicalAtom {
 	private Pitch pitch;
-	private Pair<Integer, Integer> lengthCoeff;
+	private IntPair lengthCoeff;
 
-	public Pair<Integer, Integer> getLength(){
+	public IntPair getLength(){
 		return this.lengthCoeff;
 	};
 	public void setAccidental(Map<Integer, Integer> accidentals){
@@ -18,7 +16,9 @@ public abstract class MusicalAtom {
 				}		
 	};
 	public void setLyrics(String syllableLyric){};
-	
+	public Pitch getPitch(){
+		return this.pitch;
+	}
 
 //	@Override 
 //	public boolean equals(Object that){
@@ -26,7 +26,9 @@ public abstract class MusicalAtom {
 //	}; 
 //	@Override 
 //	public int hashCode(){};
-//	@Override 
-//	public String toString(){};
+	@Override 
+	public String toString(){
+		return this.pitch.toString();
+		};
 
 }
