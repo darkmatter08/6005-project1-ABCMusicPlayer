@@ -51,5 +51,11 @@ public class Chord implements Sequence{
 		return sequence;
 	}
 	
+	@Override
+	public String toString(){
+		List<MusicalAtom> sequence = this.getSequence();
+		return sequence.toString();
+	}
+	
 
 }

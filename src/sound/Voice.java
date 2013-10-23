@@ -48,6 +48,12 @@ public class Voice implements Sequence {
 		}
 		return sequence;
 	}
+	
+	@Override
+	public String toString(){
+		List<MusicalAtom> sequence = this.getSequence();
+		return sequence.toString();
+	}
 // TODO implement equals and hashCode
 //	@Override 
 //	public boolean equals(Object that){}; 

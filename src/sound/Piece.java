@@ -8,6 +8,8 @@ import java.util.List;
 public class Piece implements Sequence{
 	private final List<Measure> measures;
 	private final String title;
+	
+	// not sure if we need to keep some of these fields in the ast
 	private final String composer = null;
 	private final IntPair meter = null;
 	private final IntPair defaultLength = null;
@@ -58,6 +60,12 @@ public class Piece implements Sequence{
 		// TODO Auto-generated method stub
 		return this.shortestLength;
 		
+	}
+	
+	@Override
+	public String toString(){
+		List<MusicalAtom> sequence = this.getSequence();
+		return sequence.toString();
 	}
 
 

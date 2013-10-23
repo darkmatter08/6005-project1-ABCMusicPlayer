@@ -9,7 +9,11 @@ import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
-
+/**
+ * 
+ * @author dalitso
+ * @category no_didit
+ */
 public class ASTtests {
 	
 	class testNote{
@@ -41,6 +45,7 @@ public class ASTtests {
 	
 	@Test
 	public void playNotes(){
+		// plays all the basic notes
 		testNote testNote = new testNote();
 		int start = 4;
 		for (Note note : testNote.noteList ){

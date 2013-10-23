@@ -38,5 +38,10 @@ public class Measure implements Sequence {
 		}
 		return sequence;
 	}
-
+	
+	@Override
+	public String toString(){
+		List<MusicalAtom> sequence = this.getSequence();
+		return sequence.toString();
+	}
 }

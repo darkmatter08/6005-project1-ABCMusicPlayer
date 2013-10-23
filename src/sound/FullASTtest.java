@@ -5,7 +5,8 @@ import org.junit.Test;
 /**
  * 
  * @author dalitso
- * this a full ast test. It will test playing the abc file abc_song.abd. Since the parset isnt yet build
+ * @category no_didit
+ * this a full ast test. It will test playing the abc file abc_song.abd. Since the parser isnt yet build
  * every note will be hard coded. 
  * 
  * X:1
@@ -49,6 +50,7 @@ public class FullASTtest {
 		piece.addMeasure(measure);
 		
 		// the third bar
+		measure = new Measure();
 		voice = new Voice();
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,1))); voice.addChord(chord);
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,1))); voice.addChord(chord);
@@ -58,6 +60,7 @@ public class FullASTtest {
 		piece.addMeasure(measure);
 		
 		// the fourth bar
+		measure = new Measure();
 		voice = new Voice();
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,2))); voice.addChord(chord);
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,2))); voice.addChord(chord);
@@ -65,6 +68,7 @@ public class FullASTtest {
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1)));	voice.addChord(chord);
 		measure.addVoice(voice);
 		piece.addMeasure(measure);
+		System.out.println(piece.toString());
 		ASTListener.ASTplay(piece);
 
 

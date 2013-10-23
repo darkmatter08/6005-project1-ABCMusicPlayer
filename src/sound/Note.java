@@ -34,8 +34,10 @@ public class Note extends MusicalAtom{
 	public String getLyrics(){
 		return this.syllableLyric;
 	}
-	public MusicalAtom getSequence(){
-		return this;// getSequence on a musical atom will simply return this.
+	
+	@Override 
+	public String toString(){
+		return this.pitch.toString();
 	}
 
 

@@ -26,7 +26,9 @@ public abstract class MusicalAtom {
 //	}; 
 //	@Override 
 //	public int hashCode(){};
-//	@Override 
-//	public String toString(){};
+	@Override 
+	public String toString(){
+		return this.pitch.toString();
+		};
 
 }
