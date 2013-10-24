@@ -50,7 +50,6 @@ public class Main {
 	        ParseTreeListener listener = new Listener();
 	        walker.walk(listener, tree);
 	        
-	        // After walking the tree calling the getExpression() function on Listener returns the expression built by 
 	        // The listener
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -87,10 +87,11 @@ public class Listener extends ABCMusicBaseListener {
 	@Override public void exitAbcheader(ABCMusicParser.AbcheaderContext ctx) { 
 		Piece piece;
 		System.out.println(ctx.fieldnumber().getText());
-		System.out.println(ctx.otherfields().get(0).fieldcomposer().getText());
-		System.out.println(ctx.otherfields().get(0).fieldcomposer().getText());
-		System.out.println(ctx.otherfields().get(0).fieldcomposer().getText());
-		System.out.println(ctx.otherfields().get(0).fieldcomposer().getText());
+		System.out.println(ctx.otherfields().get(0).getText());
+		System.out.println(ctx.otherfields().get(1).getText());
+		System.out.println(ctx.otherfields().get(2).getText());
+		System.out.println(ctx.otherfields().get(3).getText());
+		System.out.println(ctx.getText());
 		System.out.println(ctx.fieldtitle().getText());
 
 //		KeySignature keySig = ctx.fieldkey().
