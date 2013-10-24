@@ -26,7 +26,7 @@ import org.junit.Test;
 public class FullASTtest {
 	@Test
 	public void fullASTtest(){
-		Piece piece = new Piece(KeySignature.D, 1, 100, "Alphabet Song");
+		Piece piece = new Piece(KeySignature.D, 100, "Alphabet Song");
 		Measure measure = new Measure();
 		
 		// the first bar
