@@ -74,7 +74,7 @@ public class Piece implements Sequence{
 			this.shortestLength = m.getShortestLength();
 		}
 		else{
-			if (m.getShortestLength().value < this.shortestLength.value){
+			if (m.getShortestLength().getValue() < this.shortestLength.getValue()){
 				this.shortestLength = m.getShortestLength();
 			}
 		}

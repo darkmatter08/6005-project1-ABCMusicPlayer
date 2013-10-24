@@ -21,7 +21,7 @@ public class Chord implements Sequence{
 			this.shortestLength = atom.getLength();
 		}
 		else{
-			if (atom.getLength().value < this.shortestLength.value){
+			if (atom.getLength().getValue() < this.shortestLength.getValue()){
 				this.shortestLength = atom.getLength();
 			}
 		}
@@ -33,8 +33,8 @@ public class Chord implements Sequence{
 		MusicalAtom shortestAtom = null;
 		double shortestLength = Double.POSITIVE_INFINITY;
 		for (MusicalAtom atom: atoms){
-			if (atom.getLength().value < shortestLength){
-				shortestLength = atom.getLength().value;
+			if (atom.getLength().getValue() < shortestLength){
+				shortestLength = atom.getLength().getValue();
 				shortestAtom = atom;
 			}
 		}

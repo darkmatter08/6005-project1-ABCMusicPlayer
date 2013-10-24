@@ -18,13 +18,13 @@ public class ASTListener {
             // ticks/beat is a multiple of the shortest length note
         	// no lyrics for now no key signature applied for now
         	// prefer ticks per beat must take int num and denom and do something with them
-        	int ticksPerBeat = 12 * (int) piece.getShortestLength().value +1;
+        	int ticksPerBeat = 12 * (int) piece.getShortestLength().getValue() +1;
             player = new SequencePlayer(piece.getTempo(), ticksPerBeat, null);
             List<MusicalAtom> sequence = piece.getSequence();
             int startTick = 0;
             for (MusicalAtom atom : sequence){
-            	player.addNote(atom.getPitch().toMidiNote(), startTick, startTick + (int) (atom.getLength().value) +1);
-            	startTick = startTick + (int) (atom.getLength().value)+1;
+            	player.addNote(atom.getPitch().toMidiNote(), startTick, startTick + (int) (atom.getLength().getValue()) +1);
+            	startTick = startTick + (int) (atom.getLength().getValue())+1;
             }            
             System.out.println(player);
             player.play();

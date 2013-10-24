@@ -5,21 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Voice represents a voice for the length of a Measure. 
+ * Each voice has at least one Chord. 
+ * @author jains dalitso
+ *
+ */
 public class Voice implements Sequence {
 
-	private final List<Chord> chords;
-	private final Map <Integer, Integer> accidentals; // This store a dictionary with note as key and it the associated accidental as the value 
+	private final List<Chord> chords; 
 	private IntPair shortestLength;
+	
+	/**
+	 * Constructor for Voice. 
+	 */
 	public Voice() {
 		this.chords = new ArrayList<Chord>();
-		this.accidentals = new HashMap<Integer, Integer>();
 	}
 	
-	public void addAccidental(char accidental){
-		this.accidentals.put(0, 0); //this is just a place holder
-		
-	}
-	public void addChord(Chord chord){
+	/**
+	 * Adds chord to the voice. The chord must have the same 
+	 * 	number of beats as this voice does.  
+	 * @param chord The chord to be added. Must not be null.
+	 */
+	public void addChord(Chord chord) {
 		this.chords.add(chord);
 		if (this.chords.size() == 1){
 			this.shortestLength = chord.getShortestLength();
@@ -29,17 +38,23 @@ public class Voice implements Sequence {
 				this.shortestLength = chord.getShortestLength();
 			}
 		}
-		
-	} // This will take a chord and add it to the chords
+	} 
+	
+	/**
+	 * Requires that addChord() be called at least once prior. 
+	 * @see Sequence.java spec
+	 */
 	@Override
 	public IntPair getShortestLength() {
 		// TODO Auto-generated method stub
 		return this.shortestLength;
 	}
-
+	
+	/**
+	 * @see Sequence.java spec
+	 */
 	@Override
 	public List<MusicalAtom> getSequence() {
-		// TODO Auto-generated method stub
 		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
 		for (Chord chord: this.chords){
 			for (MusicalAtom atom: chord.getSequence()){
@@ -49,14 +64,51 @@ public class Voice implements Sequence {
 		return sequence;
 	}
 	
+	/**
+	 * @see Sequence.java spec
+	 */
 	@Override
-	public String toString(){
-		List<MusicalAtom> sequence = this.getSequence();
-		return sequence.toString();
+	public String toString() {
+		return this.getSequence().toString();
 	}
-// TODO implement equals and hashCode
-//	@Override 
-//	public boolean equals(Object that){}; 
-//	@Override
-//	public int hashCode(){};
+	
+	/**
+	 * @see Sequence.java spec
+	 * Eclipse autogen
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((chords == null) ? 0 : chords.hashCode());
+		result = prime * result
+				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
+		return result;
+	}
+	
+	/**
+	 * @see Sequence.java spec
+	 * Eclipse autogen
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Voice other = (Voice) obj;
+		if (chords == null) {
+			if (other.chords != null)
+				return false;
+		} else if (!chords.equals(other.chords))
+			return false;
+		if (shortestLength == null) {
+			if (other.shortestLength != null)
+				return false;
+		} else if (!shortestLength.equals(other.shortestLength))
+			return false;
+		return true;
+	}
 }
