@@ -51,13 +51,16 @@ MODEMINOR : 'm';
 METERFRACTION : DIGIT+ '/' DIGIT+;
 ACCIDENTAL : '^' | '^^' | '_' | '__' | '=';
 REST : 'Z' | 'z';
-BARLINE : '|' | '||' | '[|' | '|]' | ':|' | '|:';
+BARLINE : BAR BAR? ;//| ('[''|') ;//| '|]' | ':|' | '|:';
 NTHREPEAT : '[1' | '[2';
 BASENOTE : 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B' | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b';
 OCTAVE : '\''+ | ','+;
 COMMENT : '%' ~('\r'|'\n')* -> skip ;
 WHITESPACE : [\t' ']+;
 NUMBER : DIGIT;
+STUFF : [a-zA-Z]+;
+BAR : '|';
+
 /*
  * These are the parser rules. They define the structures used by the parser.
  *
@@ -77,7 +80,7 @@ abctune : abcheader abcmusic EOF;
 abcheader : fieldnumber fieldtitle otherfields* fieldkey;
 
 fieldnumber : 'X:' NUMBER+ ('\r'|'\n')+;
-fieldtitle : 'T:' ~('\r'|'\n')* ('\r'|'\n')+;
+fieldtitle : 'T:' (~('\r'|'\n'))+ ('\r'|'\n')+;
 otherfields : fieldcomposer | fielddefaultlength | fieldmeter | fieldtempo | fieldvoice;
 fieldcomposer : 'C:' ~('\r'|'\n')* ('\r'|'\n')+;
 fielddefaultlength : 'L:' notelengthstrict ('\r'|'\n')+;
@@ -95,8 +98,8 @@ tempo : METERFRACTION '=' NUMBER+;
 
 //Body
 
-abcmusic : abcline+;
-abcline : element+ ('\r'|'\n')+ (lyric ('\r'|'\n')+)? | midtunefield;
+abcmusic : abcline+ ('\r'|'\n')+;
+abcline : (element (' ')* element*)+ (lyric ('\r'|'\n')+)? | midtunefield ;
 element : noteelement | tupletelement | BARLINE | NTHREPEAT | WHITESPACE;
 
 noteelement : note | multinote;
@@ -104,8 +107,8 @@ note : noteorrest notelength?;
 noteorrest : pitch | REST;
 pitch : ACCIDENTAL? BASENOTE OCTAVE?;
 
-notelength : (NUMBER+)? ('/'(NUMBER+)?);
-notelengthstrict : NUMBER+ '/' NUMBER+;
+notelength : NUMBER+ |(NUMBER+)? ('/'(NUMBER+)?);
+notelengthstrict : METERFRACTION;
 
 tupletelement : tupletspec noteelement+;
 tupletspec : '(' NUMBER;
@@ -115,4 +118,3 @@ multinote : '[' note+ ']';
 midtunefield : fieldvoice;
 lyric : 'w:' lyricalelement*;
 lyricalelement : ' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | ~('\r'|'\n')*;
-
