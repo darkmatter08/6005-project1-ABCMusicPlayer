@@ -34,7 +34,7 @@ public class Voice implements Sequence {
 			this.shortestLength = chord.getShortestLength();
 		}
 		else{
-			if (chord.getShortestLength().value < this.shortestLength.value){
+			if (chord.getShortestLength().compareTo(this.shortestLength) < 0){
 				this.shortestLength = chord.getShortestLength();
 			}
 		}
