@@ -10,7 +10,7 @@
 grammar ABCMusic;
 
 /*
- * This puts "package grammar;" at the top of the output Java files.
+ * This puts 'package grammar;' at the top of the output Java files.
  * Do not change these lines unless you know what you're doing.
  */
 @header {
@@ -43,18 +43,78 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-PLUS     : '+';
-
+ 
+//Header
+fragment DIGIT : [0-9]+;
+KEYACCIDENTAL : '#' | 'b';
+MODEMINOR : 'm';
+METERFRACTION : DIGIT+ '/' DIGIT+;
+ACCIDENTAL : '^' | '^^' | '_' | '__' | '=';
+REST : 'Z' | 'z';
+BARLINE : BAR BAR? ;//| ('[''|') ;//| '|]' | ':|' | '|:';
+NTHREPEAT : '[1' | '[2';
+BASENOTE : 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B' | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b';
+OCTAVE : '\''+ | ','+;
+COMMENT : '%' ~('\r'|'\n')* -> skip ;
+WHITESPACE : [\t' ']+;
+NUMBER : DIGIT;
+STUFF : [a-zA-Z]+;
+BAR : '|';
 
 /*
  * These are the parser rules. They define the structures used by the parser.
  *
  * You should make sure you have one rule that describes the entire input.
- * This is the "start rule". The start rule should end with the special
+ * This is the 'start rule'. The start rule should end with the special
  * predefined token EOF so that it describes the entire input. Below, we've made
- * "line" the start rule.
+ * 'line' the start rule.
  *
  * For more information, see
  * http://www.antlr.org/wiki/display/ANTLR4/Parser+Rules#ParserRules-StartRulesandEOF
  */
-line     : PLUS EOF;
+ 
+ //Header
+ 
+abctune : abcheader abcmusic EOF;
+
+abcheader : fieldnumber fieldtitle otherfields* fieldkey;
+
+fieldnumber : 'X:' NUMBER+ ('\r'|'\n')+;
+fieldtitle : 'T:' (~('\r'|'\n'))+ ('\r'|'\n')+;
+otherfields : fieldcomposer | fielddefaultlength | fieldmeter | fieldtempo | fieldvoice;
+fieldcomposer : 'C:' ~('\r'|'\n')* ('\r'|'\n')+;
+fielddefaultlength : 'L:' notelengthstrict ('\r'|'\n')+;
+fieldmeter : 'M:' meter ('\r'|'\n')+;
+fieldtempo : 'Q:' tempo ('\r'|'\n')+;
+fieldvoice : 'V:' ~('\r'|'\n')* ('\r'|'\n')+;
+fieldkey : 'K:' key ('\r'|'\n')+;
+
+key : keynote MODEMINOR?;
+keynote : BASENOTE KEYACCIDENTAL?;
+
+meter : 'C' | 'C|' | METERFRACTION;
+
+tempo : METERFRACTION '=' NUMBER+;
+
+//Body
+
+abcmusic : abcline+ ('\r'|'\n')+;
+abcline : (element (' ')* element*)+ (lyric ('\r'|'\n')+)? | midtunefield ;
+element : noteelement | tupletelement | BARLINE | NTHREPEAT | WHITESPACE;
+
+noteelement : note | multinote;
+note : noteorrest notelength?;
+noteorrest : pitch | REST;
+pitch : ACCIDENTAL? BASENOTE OCTAVE?;
+
+notelength : NUMBER+ |(NUMBER+)? ('/'(NUMBER+)?);
+notelengthstrict : METERFRACTION;
+
+tupletelement : tupletspec noteelement+;
+tupletspec : '(' NUMBER;
+
+multinote : '[' note+ ']';
+
+midtunefield : fieldvoice;
+lyric : 'w:' lyricalelement*;
+lyricalelement : ' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | ~('\r'|'\n')*;

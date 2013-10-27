@@ -1,18 +1,19 @@
-// Generated from ABCMusic.g4 by ANTLR 4.0
-
-package grammar;
-
+package player;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class ABCMusicBaseListener implements ABCMusicListener {
-	@Override public void enterOtherfields(ABCMusicParser.OtherfieldsContext ctx) { }
-	@Override public void exitOtherfields(ABCMusicParser.OtherfieldsContext ctx) { }
+import sound.KeySignature;
+import sound.Piece;
 
-	@Override public void enterAbctune(ABCMusicParser.AbctuneContext ctx) { }
+import grammar.ABCMusicBaseListener;
+import grammar.ABCMusicParser;
+
+public class Listener extends ABCMusicBaseListener {
+
+	@Override public void enterAbctune(ABCMusicParser.AbctuneContext ctx) {
+	}
 	@Override public void exitAbctune(ABCMusicParser.AbctuneContext ctx) { }
 
 	@Override public void enterTempo(ABCMusicParser.TempoContext ctx) { }
@@ -81,8 +82,22 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterFieldkey(ABCMusicParser.FieldkeyContext ctx) { }
 	@Override public void exitFieldkey(ABCMusicParser.FieldkeyContext ctx) { }
 
-	@Override public void enterAbcheader(ABCMusicParser.AbcheaderContext ctx) { }
-	@Override public void exitAbcheader(ABCMusicParser.AbcheaderContext ctx) { }
+	@Override public void enterAbcheader(ABCMusicParser.AbcheaderContext ctx) { 
+	}
+	@Override public void exitAbcheader(ABCMusicParser.AbcheaderContext ctx) { 
+		Piece piece;
+		System.out.println(ctx.fieldnumber().getText());
+		System.out.println(ctx.otherfields().get(0).getText());
+		System.out.println(ctx.otherfields().get(1).getText());
+		System.out.println(ctx.otherfields().get(2).getText());
+		System.out.println(ctx.otherfields().get(3).getText());
+		System.out.println(ctx.getText());
+		System.out.println(ctx.fieldtitle().getText());
+
+//		KeySignature keySig = ctx.fieldkey().
+//		System.out.println()
+//		piece = new Piece(keySig, indexNumber, tempo, title)
+	}
 
 	@Override public void enterTupletspec(ABCMusicParser.TupletspecContext ctx) { }
 	@Override public void exitTupletspec(ABCMusicParser.TupletspecContext ctx) { }
@@ -103,4 +118,5 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void exitEveryRule(ParserRuleContext ctx) { }
 	@Override public void visitTerminal(TerminalNode node) { }
 	@Override public void visitErrorNode(ErrorNode node) { }
+
 }

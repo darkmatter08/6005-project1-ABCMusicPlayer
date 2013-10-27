@@ -1,8 +1,6 @@
 package sound;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class Piece implements Sequence{
@@ -86,7 +84,7 @@ public class Piece implements Sequence{
 	 * 	key signature.
 	 */
 	public KeySignature getKeySig(){
-		return this.keySig;//This get method will be used to get the keySig attibute
+		return this.keySig;//This get method will be used to get the keySig attribute
 	}
 	
 	/**
