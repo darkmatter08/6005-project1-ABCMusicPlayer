@@ -17,11 +17,24 @@ public class PieceWalker {
         	int ticksPerBeat = 12 * (int) piece.getShortestLength().getValue() +1;
             player = new SequencePlayer(piece.getTempo(), ticksPerBeat, null);
             
-            for()
+            int startTick = 0;
+            for (Measure m : piece.getUnderlyingRep()) {
+            	for (Voice v : m.getUnderlyingRep()) {
+            		for (Chord c : v.getUnderlyingRep()) {
+            			for (MusicalAtom ma : c.getUnderlyingRep()){
+            				int duration  = (int) Math.ceil((ma.getLength().getValue() * ticksPerBeat));
+            				player.addNote(ma.getPitch().toMidiNote(), startTick, duration);
+            				startTick += duration;
+            			}
+            		}
+            	}
+            	startTick += ticksPerBeat * m.getNumberOfBeats();
+            	// increment start tick by ticks/beat * beats/measure
+            }
             
             
             List<MusicalAtom> sequence = piece.getSequence();
-            int startTick = 0;
+            int startTick = 0; 
             for (MusicalAtom atom : sequence){
             	player.addNote(atom.getPitch().toMidiNote(), startTick, startTick + (int) (atom.getLength().getValue()) +1);
             	startTick = startTick + (int) (atom.getLength().getValue())+1;

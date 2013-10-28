@@ -11,7 +11,7 @@ public class Chord implements Sequence{
 	 * all these lists to be played at the same time. With the invariant that 
 	 * all MusicalAtoms have the same length for every embedded list.
 	 */
-	private final List<MusicalAtom> atoms;
+	private final List<List<MusicalAtom>> atoms;
 	private final IntPair length;
 	private IntPair shortestLength;
 	
@@ -19,28 +19,48 @@ public class Chord implements Sequence{
 	 * Constructor for Chord
 	 * @param length
 	 */
-	public Chord(IntPair length){
-		this.atoms =  new ArrayList<MusicalAtom>();
+	public Chord(IntPair length) {
+		this.atoms =  new ArrayList<List<MusicalAtom>>();
 		this.length = length;
 	}
 	
 	/**
-	 * Adds a MusicalAtom to the end of the Chord. 
-	 * @param m Measure to be appended. Must not be null. Must obey the meter
-	 * 	of the piece. 
+	 * Adds a list of MusicalAtoms to the end of the Chord. 
+	 * @param a list of MusicalAtoms to be appended (and played at once). 
+	 * Must not be null. Must obey the meter of the piece. Must all have
+	 * the same length. 
 	 */
-	public void addAtom(MusicalAtom a){
-		MusicalAtom atom = a.clone();
+	public void addAtom(List<MusicalAtom> a) {
+		IntPair lastAtomLength = a.get(0).getLength();
+		for (MusicalAtom m : a) {
+			assert m.getLength().equals(lastAtomLength);
+		}
+		
+		List<MusicalAtom> atom = new ArrayList<MusicalAtom>(a);
+		MusicalAtom firstAtom  = atom.get(0);
 		
 		this.atoms.add(atom);
 		if (this.atoms.size() == 1){
-			this.shortestLength = atom.getLength();
+			// Check length of firstAtom, because all of these MusicalAtoms are the same length
+			this.shortestLength = firstAtom.getLength();
 		}
 		else{
-			if (atom.getLength().getValue() < this.shortestLength.getValue()){
-				this.shortestLength = atom.getLength();
+			if (firstAtom.getLength().compareTo(this.shortestLength.getValue()) < 0) { // @cr check this logic
+				this.shortestLength = firstAtom.getLength();
 			}
 		}
+	}
+	
+	/**
+	 * Adds a single MusicalAtom to the end of the chord. 
+	 * Useful when you don't need to play an actual chord
+	 * @param a MusicalAtom to be added. Must not be null. Must 
+	 * 	obey the meter of the piece.
+	 */
+	public void addAtom(MusicalAtom a){
+		List<MusicalAtom> singleAtomList = new ArrayList<MusicalAtom>();
+		singleAtomList.add(a);
+		addAtom(singleAtomList);
 	}
 	
 	/**
@@ -48,15 +68,9 @@ public class Chord implements Sequence{
 	 */
 	@Override
 	public IntPair getShortestLength() {
-		MusicalAtom shortestAtom = null;
-		double shortestLength = Double.POSITIVE_INFINITY;
-		for (MusicalAtom atom: atoms){
-			if (atom.getLength().getValue() < shortestLength){
-				shortestLength = atom.getLength().getValue();
-				shortestAtom = atom;
-			}
-		}
-		return shortestAtom.getLength();
+		// @cr dalitso your old implementation rechecked the whole array,
+		// even though we're keeping track of this data at the time of addAtom()
+		return this.shortestLength;
 	}
 	
 	/**
@@ -66,7 +80,9 @@ public class Chord implements Sequence{
 	@Override
 	public List<MusicalAtom> getSequence() {
 		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
-		for (MusicalAtom atom: this.atoms){
+		// @cr garbage. this method can probably be dropped from the interface
+		// We can rename getUnderlyingRep() to getSequence.
+		for (MusicalAtom atom: this.atoms.get(0)){ 
 			sequence.add(atom);
 		}
 		return sequence;
@@ -127,14 +143,22 @@ public class Chord implements Sequence{
 	 */
 	@Override
 	public int getNumberOfBeats() {
-		return atoms.size();
+		double numberOfBeats = 0;
+		for (List<MusicalAtom> simul : this.atoms){
+			numberOfBeats += simul.get(0).getLength().getValue();
+		}
+		return (int) Math.round(numberOfBeats);
 	}
 
 	@Override
-	public List<MusicalAtom> getUnderlyingRep() {
-		List<MusicalAtom> rep = new ArrayList<MusicalAtom>();
-		for (MusicalAtom m: this.atoms){
-			rep.add(m.clone());
+	public List<List<MusicalAtom>> getUnderlyingRep() {
+		List<List<MusicalAtom>> rep = new ArrayList<List<MusicalAtom>>();
+		for (List<MusicalAtom> m : this.atoms){
+			List<MusicalAtom> simul = new ArrayList<MusicalAtom>();
+			for (MusicalAtom ma : m){
+				simul.add(ma.clone());
+			}
+			rep.add(simul);
 		}
 		return rep;
 	}
@@ -142,8 +166,12 @@ public class Chord implements Sequence{
 	@Override
 	public Chord clone() {
 		Chord clone = new Chord(this.length.clone());
-		for (MusicalAtom m : this.atoms) {
-			clone.addAtom(m);
+		for (List<MusicalAtom> m : this.atoms){
+			List<MusicalAtom> simul = new ArrayList<MusicalAtom>();
+			for (MusicalAtom ma : m){
+				simul.add(ma.clone());
+			}
+			clone.addAtom(simul);
 		}
 		return clone;
 	}
