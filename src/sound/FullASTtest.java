@@ -73,4 +73,55 @@ public class FullASTtest {
 
 
 	}
+	
+	@Test
+	public void sjWalkerTest(){
+		Piece piece = new Piece(KeySignature.D, 100, "SJ Music", new IntPair(4, 4), new IntPair(1, 1));
+				//(KeySignature.D, 100, "Alphabet Song");
+		Measure measure = new Measure();
+		
+		// the first bar
+		Voice voice; 
+		voice = new Voice();
+		Chord chord;
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('A'), new IntPair(1,1)));	voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('A'), new IntPair(1,1))); voice.addChord(chord);
+		measure.addVoice(voice);
+		piece.addMeasure(measure);
+		
+		// the second bar
+		measure = new Measure();
+		voice = new Voice();
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('B'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('B'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('A'), new IntPair(2,1)));	voice.addChord(chord);
+		measure.addVoice(voice);
+		piece.addMeasure(measure);
+		
+		// the third bar
+		measure = new Measure();
+		voice = new Voice();
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,1))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('F'), new IntPair(1,1)));	voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('F'), new IntPair(1,1)));	voice.addChord(chord);
+		measure.addVoice(voice);
+		piece.addMeasure(measure);
+		
+		// the fourth bar
+		measure = new Measure();
+		voice = new Voice();
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,2))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,2))); voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,2)));	voice.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1)));	voice.addChord(chord);
+		measure.addVoice(voice);
+		piece.addMeasure(measure);
+		System.out.println(piece.toString());
+		PieceWalker.walkPiece(piece);
+
+
+	}
 }
