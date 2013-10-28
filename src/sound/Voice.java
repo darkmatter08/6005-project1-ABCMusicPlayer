@@ -29,6 +29,10 @@ public class Voice implements Sequence {
 	 * @param chord The chord to be added. Must not be null.
 	 */
 	public void addChord(Chord chord) {
+		// @cr does padding apply to a chord? @see measure.addVoice()
+		if (this.chords.size() != 0)
+			assert chord.getNumberOfBeats() == this.getNumberOfBeats();
+		
 		this.chords.add(chord);
 		if (this.chords.size() == 1){
 			this.shortestLength = chord.getShortestLength();
@@ -110,5 +114,19 @@ public class Voice implements Sequence {
 		} else if (!shortestLength.equals(other.shortestLength))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * addChord() must be called at least once
+	 * See spec in @see Sequence.java
+	 */
+	@Override
+	public int getNumberOfBeats() {
+		Chord maxBeats = this.chords.get(0);
+		for(Chord chord : this.chords){
+			if(chord.getNumberOfBeats() > maxBeats.getNumberOfBeats())
+				maxBeats = chord;
+		}
+		return maxBeats.getNumberOfBeats();
 	}
 }

@@ -24,6 +24,11 @@ public interface Sequence {
 	public List<MusicalAtom> getSequence();  
 	
 	/**
+	 * @return the maximum number of beats in this sequence 
+	 */
+	public int getNumberOfBeats();
+	
+	/**
 	 * The equality method. Two sequences are equal if they are represented by 
 	 * 	the same sequence of MusicalAtoms.
 	 * 	Obeys reflexiveness, transitivity, invariance

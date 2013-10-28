@@ -66,6 +66,8 @@ public class Piece implements Sequence{
 	 */
 	public void addMeasure(Measure m){
 		// @cr we need an assert showing that m has the correct # of beats
+		if (this.measures.size() != 0)
+			assert m.getNumberOfBeats() == this.getNumberOfBeats(); 
 		
 		this.measures.add(m);
 		if (this.measures.size() == 1){
@@ -121,5 +123,18 @@ public class Piece implements Sequence{
 	@Override
 	public String toString(){
 		return this.getSequence().toString();
+	}
+	
+	/**
+	 * addMeasure() must be called at least once
+	 * See spec in @see Sequence.java
+	 */
+	@Override
+	public int getNumberOfBeats() {
+		int result = 0;
+		for(Measure measure: this.measures){
+			result += measure.getNumberOfBeats();
+		}
+		return result;
 	}
 }

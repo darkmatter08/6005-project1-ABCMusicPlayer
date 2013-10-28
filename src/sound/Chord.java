@@ -120,5 +120,15 @@ public class Chord implements Sequence{
 			return false;
 		return true;
 	}
+
+	/**
+	 * addAtom() must be called at least once
+	 * See spec in @see Sequence.java
+	 */
+	@Override
+	public int getNumberOfBeats() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

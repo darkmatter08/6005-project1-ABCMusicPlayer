@@ -21,6 +21,13 @@ public class Measure implements Sequence {
 	 * @param voice The voice to be added to the measure
 	 */
 	public void addVoice(Voice voice){
+		// @cr How will we handle adding in voices that aren't a full measure?
+		//		i.e. who's responsibility is padding the measure?
+		//		If it's the client's, then getNumberOfBeats() doesn't need to 
+		//		search the list for the max. 
+		if (this.voices.size() != 0)
+			assert voice.getNumberOfBeats() == this.getNumberOfBeats();
+			
 		this.voices.add(voice);
 		if (this.voices.size() == 1){
 			this.shortestLength = voice.getShortestLength();
@@ -49,6 +56,7 @@ public class Measure implements Sequence {
 		// TODO Auto-generated method stub
 		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
 		for (Voice voice: voices){
+			// @cr this should be in parallel at this level, not in a sequence.
 			for (MusicalAtom atom: voice.getSequence()){
 				sequence.add(atom);
 			}
@@ -94,6 +102,21 @@ public class Measure implements Sequence {
 		} else if (!voices.equals(other.voices))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * addVoice() must be called at least once
+	 * See spec in @see Sequence.java
+	 */
+	@Override
+	public int getNumberOfBeats() {
+		// @cr can a voice end at different time? 
+		Voice maxBeats = this.voices.get(0);
+		for(Voice voice : this.voices){
+			if(voice.getNumberOfBeats() > maxBeats.getNumberOfBeats())
+				maxBeats = voice;
+		}
+		return maxBeats.getNumberOfBeats();
 	}
 	
 }
