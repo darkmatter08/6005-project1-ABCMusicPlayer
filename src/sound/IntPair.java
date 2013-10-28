@@ -1,6 +1,6 @@
 package sound;
 
-public class IntPair implements Comparable{
+public class IntPair implements Comparable, Cloneable {
 	final int numerator;
     final int denominator; 
     
@@ -63,6 +63,11 @@ public class IntPair implements Comparable{
 			return 0;
 		else
 			return -1;
+	}
+	
+	@Override
+	public IntPair clone(){
+		return new IntPair(this.numerator, this.denominator);
 	}
 
 }

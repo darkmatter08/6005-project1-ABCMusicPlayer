@@ -1,9 +1,7 @@
 package sound;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Voice represents a voice for the length of a Measure. 
@@ -28,10 +26,12 @@ public class Voice implements Sequence {
 	 * 	number of beats as this voice does.  
 	 * @param chord The chord to be added. Must not be null.
 	 */
-	public void addChord(Chord chord) {
+	public void addChord(Chord c) {
 		// @cr does padding apply to a chord? @see measure.addVoice()
 		if (this.chords.size() != 0)
-			assert chord.getNumberOfBeats() == this.getNumberOfBeats();
+			assert c.getNumberOfBeats() == this.getNumberOfBeats();
+		
+		Chord chord = c.clone();
 		
 		this.chords.add(chord);
 		if (this.chords.size() == 1){
@@ -128,5 +128,23 @@ public class Voice implements Sequence {
 				maxBeats = chord;
 		}
 		return maxBeats.getNumberOfBeats();
+	}
+
+	@Override
+	public List<Chord> getUnderlyingRep() {
+		List<Chord> rep = new ArrayList<Chord>();
+		for (Chord c: this.chords){
+			rep.add(c.clone());
+		}
+		return rep;
+	}
+	
+	@Override
+	public Voice clone() {
+		Voice clone = new Voice();
+		for (Chord c : this.chords) {
+			clone.addChord(c);
+		}
+		return clone;
 	}
 }

@@ -8,7 +8,6 @@ public class Piece implements Sequence{
 	private final String title;
 	
 	// @cr Why are so many things initialized to null?
-	private final String composer = null;
 	// meter.numerator is beats/meter
 	// 1/(meter.denominator) is the note that gets 1 beat
 	private IntPair meter = null; // @cr how come we don't require clients to pass this in? Does it only matter for malformed inputs?
@@ -69,13 +68,15 @@ public class Piece implements Sequence{
 		if (this.measures.size() != 0)
 			assert m.getNumberOfBeats() == this.getNumberOfBeats(); 
 		
-		this.measures.add(m);
+		Measure measure = m.clone();
+		
+		this.measures.add(measure);
 		if (this.measures.size() == 1){
-			this.shortestLength = m.getShortestLength();
+			this.shortestLength = measure.getShortestLength();
 		}
 		else{
-			if (m.getShortestLength().getValue() < this.shortestLength.getValue()){
-				this.shortestLength = m.getShortestLength();
+			if (measure.getShortestLength().getValue() < this.shortestLength.getValue()){
+				this.shortestLength = measure.getShortestLength();
 			}
 		}
 	}
@@ -136,5 +137,23 @@ public class Piece implements Sequence{
 			result += measure.getNumberOfBeats();
 		}
 		return result;
+	}
+
+	@Override
+	public List<Measure> getUnderlyingRep() {
+		List<Measure> rep = new ArrayList<Measure>();
+		for (Measure m : this.measures){
+			rep.add(m.clone());
+		}
+		return rep;
+	}
+	
+	@Override
+	public Piece clone() {
+		Piece clone = new Piece(this.keySig, this.tempo, this.title, this.meter.clone(), this.defaultLength.clone());
+		for (Measure m : this.measures) {
+			clone.addMeasure(m);
+		}
+		return clone;
 	}
 }

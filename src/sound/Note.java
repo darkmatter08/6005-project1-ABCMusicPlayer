@@ -8,7 +8,8 @@ public class Note extends MusicalAtom{
 	private IntPair lengthCoeff;
 	private String syllableLyric;
 
-	public Note(Pitch pitch, IntPair length){
+	public Note(Pitch pitch, IntPair length) {
+		super(pitch, length);
 		this.lengthCoeff = length;
 		this.pitch = pitch;
 		// This will initialize the class with the parse note pitch with the length of length
@@ -40,5 +41,10 @@ public class Note extends MusicalAtom{
 		return this.pitch.toString();
 	}
 
-
+	@Override
+	public Note clone() {
+		Note clone = new Note(this.pitch.clone(), this.lengthCoeff.clone());
+		clone.setLyrics(this.getLyrics());
+		return clone;
+	}
 }

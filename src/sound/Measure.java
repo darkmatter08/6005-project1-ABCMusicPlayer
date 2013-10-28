@@ -20,14 +20,16 @@ public class Measure implements Sequence {
 	 * beats per measure as other voices. @cr how will we handle this?
 	 * @param voice The voice to be added to the measure
 	 */
-	public void addVoice(Voice voice){
+	public void addVoice(Voice v){
 		// @cr How will we handle adding in voices that aren't a full measure?
 		//		i.e. who's responsibility is padding the measure?
 		//		If it's the client's, then getNumberOfBeats() doesn't need to 
 		//		search the list for the max. 
 		if (this.voices.size() != 0)
-			assert voice.getNumberOfBeats() == this.getNumberOfBeats();
+			assert v.getNumberOfBeats() == this.getNumberOfBeats();
 			
+		Voice voice = v.clone();
+		
 		this.voices.add(voice);
 		if (this.voices.size() == 1){
 			this.shortestLength = voice.getShortestLength();
@@ -117,6 +119,24 @@ public class Measure implements Sequence {
 				maxBeats = voice;
 		}
 		return maxBeats.getNumberOfBeats();
+	}
+
+	@Override
+	public List<Voice> getUnderlyingRep() {
+		List<Voice> rep = new ArrayList<Voice>();
+		for (Voice v: this.voices){
+			rep.add(v.clone());
+		}
+		return rep;
+	}
+	
+	@Override
+	public Measure clone() {
+		Measure clone = new Measure();
+		for (Voice v : this.voices) {
+			clone.addVoice(v);
+		}
+		return clone;
 	}
 	
 }

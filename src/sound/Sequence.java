@@ -7,7 +7,7 @@ import java.util.List;
  * @author jains dalitso
  *
  */
-public interface Sequence {
+public interface Sequence extends Cloneable{
 	
 	// This will recursively search for the shortest length note in the 
 	// AST and return a pair of (numerator, denominator)
@@ -48,4 +48,15 @@ public interface Sequence {
 	 * @return String representing the Sequence
 	 */
 	@Override public String toString();
+	
+	/**
+	 * @return a List representing Sequence's sub-sequences.
+	 */
+	public List<?> getUnderlyingRep();
+	
+	// @cr where do we put in the spec for cloning?
+	/**
+	 * @return Sequence a deep copy of the object
+	 */
+	//public Sequence clone();
 }

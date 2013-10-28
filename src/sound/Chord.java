@@ -3,8 +3,6 @@ package sound;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.misc.Pair;
-
 public class Chord implements Sequence{
 	
 	/* @cr
@@ -31,7 +29,9 @@ public class Chord implements Sequence{
 	 * @param m Measure to be appended. Must not be null. Must obey the meter
 	 * 	of the piece. 
 	 */
-	public void addAtom(MusicalAtom atom){
+	public void addAtom(MusicalAtom a){
+		MusicalAtom atom = a.clone();
+		
 		this.atoms.add(atom);
 		if (this.atoms.size() == 1){
 			this.shortestLength = atom.getLength();
@@ -127,8 +127,25 @@ public class Chord implements Sequence{
 	 */
 	@Override
 	public int getNumberOfBeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		return atoms.size();
+	}
+
+	@Override
+	public List<MusicalAtom> getUnderlyingRep() {
+		List<MusicalAtom> rep = new ArrayList<MusicalAtom>();
+		for (MusicalAtom m: this.atoms){
+			rep.add(m.clone());
+		}
+		return rep;
+	}
+	
+	@Override
+	public Chord clone() {
+		Chord clone = new Chord(this.length.clone());
+		for (MusicalAtom m : this.atoms) {
+			clone.addAtom(m);
+		}
+		return clone;
 	}
 	
 }
