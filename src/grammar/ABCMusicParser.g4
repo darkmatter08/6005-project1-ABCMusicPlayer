@@ -7,7 +7,7 @@
  * java -jar ../../antlr.jar ABCMusic.g4
  */
 
-grammar ABCMusic;
+parser grammar ABCMusicParser; options { tokenVocab=ABCMusicLexer; }
 
 /*
  * This puts 'package grammar;' at the top of the output Java files.
@@ -41,27 +41,6 @@ package grammar;
 }
 
 /*
- * These are the lexical rules. They define the tokens used by the lexer.
- */
- 
-//Header
-fragment DIGIT : [0-9]+;
-KEYACCIDENTAL : '#' | 'b';
-MODEMINOR : 'm';
-METERFRACTION : DIGIT+ '/' DIGIT+;
-ACCIDENTAL : '^' | '^^' | '_' | '__' | '=';
-REST : 'Z' | 'z';
-BARLINE : BAR BAR? ;//| ('[''|') ;//| '|]' | ':|' | '|:';
-NTHREPEAT : '[1' | '[2';
-BASENOTE : 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B' | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b';
-OCTAVE : '\''+ | ','+;
-COMMENT : '%' ~('\r'|'\n')* -> skip ;
-WHITESPACE : [\t' ']+;
-NUMBER : DIGIT;
-STUFF : [a-zA-Z]+;
-BAR : '|';
-
-/*
  * These are the parser rules. They define the structures used by the parser.
  *
  * You should make sure you have one rule that describes the entire input.
@@ -73,48 +52,31 @@ BAR : '|';
  * http://www.antlr.org/wiki/display/ANTLR4/Parser+Rules#ParserRules-StartRulesandEOF
  */
  
- //Header
- 
-abctune : abcheader abcmusic EOF;
+abctune : abcheader abcbody EOF;
 
-abcheader : fieldnumber fieldtitle otherfields* fieldkey;
-
-fieldnumber : 'X:' NUMBER+ ('\r'|'\n')+;
-fieldtitle : 'T:' (~('\r'|'\n'))+ ('\r'|'\n')+;
-otherfields : fieldcomposer | fielddefaultlength | fieldmeter | fieldtempo | fieldvoice;
-fieldcomposer : 'C:' ~('\r'|'\n')* ('\r'|'\n')+;
-fielddefaultlength : 'L:' notelengthstrict ('\r'|'\n')+;
-fieldmeter : 'M:' meter ('\r'|'\n')+;
-fieldtempo : 'Q:' tempo ('\r'|'\n')+;
-fieldvoice : 'V:' ~('\r'|'\n')* ('\r'|'\n')+;
-fieldkey : 'K:' key ('\r'|'\n')+;
-
-key : keynote MODEMINOR?;
-keynote : BASENOTE KEYACCIDENTAL?;
-
-meter : 'C' | 'C|' | METERFRACTION;
-
-tempo : METERFRACTION '=' NUMBER+;
+//Header
+abcheader : INDEX TITLE optionalfields? KEY;
+optionalfields : (COMPOSER | LENGTH | METER | TEMPO | VOICE)+;
 
 //Body
-
-abcmusic : abcline+ ('\r'|'\n')+;
-abcline : (element (' ')* element*)+ (lyric ('\r'|'\n')+)? | midtunefield ;
-element : noteelement | tupletelement | BARLINE | NTHREPEAT | WHITESPACE;
-
+abcbody : bodysection+;
+bodysection : element+ LINEFEED+ (LYRIC LINEFEED+)? | midtunefield;
+element : noteelement | tupletelement | BARLINE | NTHREPEAT;
 noteelement : note | multinote;
 note : noteorrest notelength?;
+multinote : OPENBRACKET note+ CLOSEBRACKET;
 noteorrest : pitch | REST;
 pitch : ACCIDENTAL? BASENOTE OCTAVE?;
 
-notelength : NUMBER+ |(NUMBER+)? ('/'(NUMBER+)?);
-notelengthstrict : METERFRACTION;
+notelength : (NUMBER)? FRACTIONBAR? (NUMBER)?;
 
 tupletelement : tupletspec noteelement+;
-tupletspec : '(' NUMBER;
+tupletspec : OPENPAREN NUMBER;
 
-multinote : '[' note+ ']';
+midtunefield : VOICEBODY;
 
-midtunefield : fieldvoice;
-lyric : 'w:' lyricalelement*;
-lyricalelement : ' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | ~('\r'|'\n')*;
+
+
+
+
+

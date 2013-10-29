@@ -13,7 +13,7 @@ package sound;
  *   new Pitch('C').transpose(OCTAVE) makes high C.
  *   new Pitch('C').transpose(-OCTAVE) makes low C.
  */
-public class Pitch implements Cloneable{
+public class Pitch implements Cloneable {
     private final int value;
     private final int accidental;
     private final int octave;
@@ -222,4 +222,13 @@ public class Pitch implements Cloneable{
     public Pitch clone() {
     	return new Pitch(this.value, this.accidental, this.octave);
     }
+    
+    /**
+     * Method to get an equivalent note but in the "base" octave.
+     * Used to ease comparison between Pitches. 
+     * @return Pitch that in the "base" octave
+     */
+	public Pitch getBaseOctaveEquivilant() {
+		return new Pitch(value, accidental, 0);
+	}
 }

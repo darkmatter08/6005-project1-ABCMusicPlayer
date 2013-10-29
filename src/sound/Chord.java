@@ -5,12 +5,6 @@ import java.util.List;
 
 public class Chord implements Sequence{
 	
-	/* @cr
-	 * probably a List<List<MusicalAtom>>. The inner list is a list of all 
-	 * the musicalAtoms to be played at a time. The outer list is a list of 
-	 * all these lists to be played at the same time. With the invariant that 
-	 * all MusicalAtoms have the same length for every embedded list.
-	 */
 	private final List<MusicalAtom> atoms;
 	private final IntPair length;
 	private IntPair shortestLength;
