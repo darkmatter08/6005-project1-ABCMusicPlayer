@@ -8,7 +8,6 @@ import java.util.List;
  *
  */
 public interface Sequence extends Cloneable{
-	
 	// This will recursively search for the shortest length note in the 
 	// AST and return a pair of (numerator, denominator)
 	/**
@@ -21,12 +20,12 @@ public interface Sequence extends Cloneable{
 	 * @return List<MusicalAtom> A list of MusicalAtoms that represents
 	 * 	the Sequence. 
 	 */
-	public List<MusicalAtom> getSequence();  
+	//public List<MusicalAtom> getSequence();  
 	
 	/**
 	 * @return the maximum number of beats in this sequence 
 	 */
-	public int getNumberOfBeats();
+	//public int getNumberOfBeats();
 	
 	/**
 	 * The equality method. Two sequences are equal if they are represented by 
@@ -35,7 +34,7 @@ public interface Sequence extends Cloneable{
 	 * @param that Object to be compared to.
 	 * @return boolean true if the objects are equal, false otherwise.
 	 */
-	@Override public boolean equals(Object that); 
+	//@Override public boolean equals(Object that); 
 	
 	/**
 	 * Two equal objects will have the same hashCode.
@@ -52,7 +51,7 @@ public interface Sequence extends Cloneable{
 	/**
 	 * @return a List representing Sequence's sub-sequences.
 	 */
-	public List<?> getUnderlyingRep();
+	//public List<?> getUnderlyingRep();
 	
 	// @cr where do we put in the spec for cloning?
 	/**

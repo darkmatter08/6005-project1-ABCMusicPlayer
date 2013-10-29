@@ -18,14 +18,28 @@ public class ASTListener {
             // ticks/beat is a multiple of the shortest length note
         	// no lyrics for now no key signature applied for now
         	// prefer ticks per beat must take int num and denom and do something with them
-        	int ticksPerBeat = 12 * (int) piece.getShortestLength().getValue() +1;
+        	//old implementation
+//        	int ticksPerBeat = 12 * (int) piece.getShortestLength().getValue() +1;
+//            player = new SequencePlayer(piece.getTempo(), ticksPerBeat, null);
+//            List<MusicalAtom> sequence = piece.getSequence();
+//            int startTick = 0;
+//            for (MusicalAtom atom : sequence){
+//            	player.addNote(atom.getPitch().toMidiNote(), startTick, startTick + (int) (atom.getLength().getValue()) +1);
+//            	startTick = startTick + (int) (atom.getLength().getValue())+1;
+//            }    
+        	//@cr a bug in getShortestLength()
+        	System.out.println("the shortest length is :" + piece.getShortestLength().numerator + "/"+ piece.getShortestLength().denominator);
+        	int ticksPerBeat = 6 * (int)((piece.getShortestLength().denominator)); // handles triplets by multiplying by a common factor
             player = new SequencePlayer(piece.getTempo(), ticksPerBeat, null);
-            List<MusicalAtom> sequence = piece.getSequence();
+            List<Chord> sequence = piece.getSequence();
             int startTick = 0;
-            for (MusicalAtom atom : sequence){
-            	player.addNote(atom.getPitch().toMidiNote(), startTick, startTick + (int) (atom.getLength().getValue()) +1);
-            	startTick = startTick + (int) (atom.getLength().getValue())+1;
-            }            
+            for (Chord c : sequence){
+            	int duration = (int) Math.round(c.getLength().getValue()*ticksPerBeat);
+            	for (MusicalAtom atom :  c.getAtoms()){
+            		player.addNote(atom.getPitch().toMidiNote(), startTick, duration);
+            		startTick = startTick + duration;
+            	}
+            }    
             System.out.println(player);
             player.play();
 

@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Measure implements Sequence {
 	
-	private final List<Voice> voices;
+	private final List<Chord> chords;
 	private IntPair shortestLength;
 	
 	/**
 	 * Constructor for Measure
 	 */
-	public Measure(){
-		this.voices = new ArrayList<Voice>();
+	public Measure() {
+		this.chords = new ArrayList<Chord>();
 	}
 	
 	/**
@@ -20,26 +20,23 @@ public class Measure implements Sequence {
 	 * beats per measure as other voices. @cr how will we handle this?
 	 * @param voice The voice to be added to the measure
 	 */
-	public void addVoice(Voice v){
-		// @cr How will we handle adding in voices that aren't a full measure?
-		//		i.e. who's responsibility is padding the measure?
-		//		If it's the client's, then getNumberOfBeats() doesn't need to 
-		//		search the list for the max. 
-		if (this.voices.size() != 0)
-			assert v.getNumberOfBeats() == this.getNumberOfBeats();
-			
-		Voice voice = v.clone();
+	public void addChord(Chord c) {
+		// @cr does padding apply to a chord? @see measure.addVoice()
+//		if (this.chords.size() != 0)
+//			assert c.getNumberOfBeats() == this.getNumberOfBeats();
 		
-		this.voices.add(voice);
-		if (this.voices.size() == 1){
-			this.shortestLength = voice.getShortestLength();
+		Chord chord = c.clone();
+		
+		this.chords.add(chord);
+		if (this.chords.size() == 1){
+			this.shortestLength = chord.getShortestLength();
 		}
 		else{
-			if (voice.getShortestLength().getValue() < this.shortestLength.getValue()){
-				this.shortestLength = voice.getShortestLength();
+			if (chord.getShortestLength().compareTo(this.shortestLength) < 0){
+				this.shortestLength = chord.getShortestLength();
 			}
 		}
-	}
+	} 
 	
 	/**
 	 * @see Sequence.java spec
@@ -53,18 +50,16 @@ public class Measure implements Sequence {
 	/**
 	 * @see Sequence.java spec
 	 */
-	@Override
-	public List<MusicalAtom> getSequence() {
-		// TODO Auto-generated method stub
-		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
-		for (Voice voice: voices){
-			// @cr this should be in parallel at this level, not in a sequence.
-			for (MusicalAtom atom: voice.getSequence()){
-				sequence.add(atom);
-			}
+	//@Override
+	public List<Chord> getSequence() {
+		List<Chord> sequence =  new ArrayList<Chord>();
+		for (Chord chord: this.chords){
+			sequence.add(chord);
+			
 		}
 		return sequence;
 	}
+	
 	
 	/**
 	 * @see Sequence.java spec
@@ -74,69 +69,73 @@ public class Measure implements Sequence {
 		return this.getSequence().toString();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
-		result = prime * result + ((voices == null) ? 0 : voices.hashCode());
-		return result;
-	}
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result
+//				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
+//		result = prime * result + ((voices == null) ? 0 : voices.hashCode());
+//		return result;
+//	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Measure other = (Measure) obj;
-		if (shortestLength == null) {
-			if (other.shortestLength != null)
-				return false;
-		} else if (!shortestLength.equals(other.shortestLength))
-			return false;
-		if (voices == null) {
-			if (other.voices != null)
-				return false;
-		} else if (!voices.equals(other.voices))
-			return false;
-		return true;
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		Measure other = (Measure) obj;
+//		if (shortestLength == null) {
+//			if (other.shortestLength != null)
+//				return false;
+//		} else if (!shortestLength.equals(other.shortestLength))
+//			return false;
+//		if (voices == null) {
+//			if (other.voices != null)
+//				return false;
+//		} else if (!voices.equals(other.voices))
+//			return false;
+//		return true;
+//	}
 	
 	/**
 	 * addVoice() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
-	@Override
-	public int getNumberOfBeats() {
-		// @cr can a voice end at different time? 
-		Voice maxBeats = this.voices.get(0);
-		for(Voice voice : this.voices){
-			if(voice.getNumberOfBeats() > maxBeats.getNumberOfBeats())
-				maxBeats = voice;
-		}
-		return maxBeats.getNumberOfBeats();
-	}
+//	@Override
+//	public int getNumberOfBeats() {
+//		// @cr can a voice end at different time? 
+//		Voice maxBeats = this.voices.get(0);
+//		for(Voice voice : this.voices){
+//			if(voice.getNumberOfBeats() > maxBeats.getNumberOfBeats()){
+//				m.getNumberOfBeats();
+//				}
+//			}
+//				maxBeats = voice;
+//		}
+//	
+//		return maxBeats.getNumberOfBeats();
+//	}
 
-	@Override
-	public List<Voice> getUnderlyingRep() {
-		List<Voice> rep = new ArrayList<Voice>();
-		for (Voice v: this.voices){
-			rep.add(v.clone());
-		}
-		return rep;
-	}
-	
-	@Override
-	public Measure clone() {
-		Measure clone = new Measure();
-		for (Voice v : this.voices) {
-			clone.addVoice(v);
-		}
-		return clone;
-	}
+//	@Override
+//	public List<Voice> getUnderlyingRep() {
+//		List<Voice> rep = new ArrayList<Voice>();
+//		for (Voice v: this.voices){
+//			rep.add(v.clone());
+//		}
+//		return rep;
+//	}
+//	
+//	@Override
+//	public Measure clone() {
+//		Measure clone = new Measure();
+//		for (Voice v : this.voices) {
+//			clone.addVoice(v);
+//		}
+//		return clone;
+//	}
 	
 }

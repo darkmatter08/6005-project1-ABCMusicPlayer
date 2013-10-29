@@ -42,33 +42,26 @@ public class Chord implements Sequence{
 			}
 		}
 	}
+	public List<MusicalAtom> getAtoms(){
+		return this.atoms;
+	}
 	
 	/**
 	 * @see Sequence.java spec
 	 */
 	@Override
 	public IntPair getShortestLength() {
-		MusicalAtom shortestAtom = null;
-		double shortestLength = Double.POSITIVE_INFINITY;
-		for (MusicalAtom atom: atoms){
-			if (atom.getLength().getValue() < shortestLength){
-				shortestLength = atom.getLength().getValue();
-				shortestAtom = atom;
-			}
-		}
-		return shortestAtom.getLength();
+		return this.shortestLength;
 	}
 	
 	/**
 	 * Requires that addAtom() be called at least once prior. 
 	 * @see Sequence.java spec
 	 */
-	@Override
-	public List<MusicalAtom> getSequence() {
-		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
-		for (MusicalAtom atom: this.atoms){
-			sequence.add(atom);
-		}
+	//@Override
+	public List<Chord> getSequence() {
+		List<Chord> sequence =  new ArrayList<Chord>();
+		sequence.add(this);
 		return sequence;
 	}
 	
@@ -77,7 +70,7 @@ public class Chord implements Sequence{
 	 */
 	@Override
 	public String toString(){
-		List<MusicalAtom> sequence = this.getSequence();
+		List<MusicalAtom> sequence = this.getAtoms();
 		return sequence.toString();
 	}
 	
@@ -125,12 +118,12 @@ public class Chord implements Sequence{
 	 * addAtom() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
-	@Override
-	public int getNumberOfBeats() {
-		return atoms.size();
-	}
-
-	@Override
+//	@Override
+//	public int getNumberOfBeats() {
+//		return atoms.size();
+//	}
+//
+//	@Override
 	public List<MusicalAtom> getUnderlyingRep() {
 		List<MusicalAtom> rep = new ArrayList<MusicalAtom>();
 		for (MusicalAtom m: this.atoms){
@@ -147,5 +140,9 @@ public class Chord implements Sequence{
 		}
 		return clone;
 	}
+	
+	public IntPair getLength() {
+		return this.length;
+		}
 	
 }

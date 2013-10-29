@@ -10,24 +10,29 @@ public class PieceWalker {
 	public static SequencePlayer walkPiece(Piece piece){
 		SequencePlayer player = null;
         try {
-        	int ticksPerBeat = 12 * (int) piece.getShortestLength().getValue() +1;
+        	int ticksPerBeat = 6*piece.getShortestLength().denominator;
             player = new SequencePlayer(piece.getTempo(), ticksPerBeat, null);
             
             int startTick = 0;
             for (Measure m : piece.getUnderlyingRep()) {
-            	int voiceStartTick = 0;
+            	int voiceStartTick = startTick;
             	for (Voice v : m.getUnderlyingRep()) {
             		for (Chord c : v.getUnderlyingRep()) {
             			int duration = 0;
+            			
+            			
             			for (MusicalAtom simul: c.getUnderlyingRep()){
 	            			duration = (int) Math.ceil((simul.getLength().getValue() * ticksPerBeat));
             				player.addNote(simul.getPitch().toMidiNote(), voiceStartTick, duration);
+            				System.out.println(c.toString() + " , "+ voiceStartTick + ", " + duration);
             			}
             			voiceStartTick += duration; // add length of duration to tracker
             		}
             		voiceStartTick = startTick;
             	}
+            	
             	startTick += ticksPerBeat * m.getNumberOfBeats();
+            	System.out.println(m.getNumberOfBeats());
             	// increment start tick by ticks/beat * beats/measure
             }
             
