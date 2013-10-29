@@ -1,8 +1,8 @@
 package sound;
 
 public class IntPair implements Comparable, Cloneable {
-	final int numerator;
-    final int denominator; 
+	public final int numerator;
+    public final int denominator; 
     
     public IntPair(int num, int denom){
     	this.denominator = denom;
