@@ -75,9 +75,11 @@ public class Piece implements Sequence{
 	 * 	of the piece. 
 	 */
 	public void addMeasure(String voiceString, Measure m){
+		// @cr assert not needed at this level, it's handled by voice.
 		// @cr we need an assert showing that m has the correct # of beats
 //		if (this.measures.size() != 0)
 //			assert m.getNumberOfBeats() == this.getNumberOfBeats(); 
+		
 		if (this.voiceMap.containsKey(voiceString)){
 			Voice voice = this.voiceMap.get(voiceString);
 			voice.addMeasure(m);
@@ -162,16 +164,15 @@ public class Piece implements Sequence{
 	 * addMeasure() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
-//	@Override
-//	public int getNumberOfBeats() {
-//		double result = 0;
-//		for(Voice v: this.voiceMap.values()){
-//			result += v.getNumberOfBeats();
-//		}
-//		result += this.voice.getNumberOfBeats();
-//
-//		return result;
-//	}
+	@Override
+	public double getNumberOfBeats() {
+		double maxNumberOfBeats = 0;
+		for(Voice v: this.voiceMap.values()){
+			if (v.getNumberOfBeats() > maxNumberOfBeats) 
+				maxNumberOfBeats = v.getNumberOfBeats();
+		}
+		return maxNumberOfBeats;
+	}
 
 //	@Override
 //	public List<Measure> getUnderlyingRep() {

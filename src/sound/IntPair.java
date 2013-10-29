@@ -69,5 +69,18 @@ public class IntPair implements Comparable, Cloneable {
 	public IntPair clone(){
 		return new IntPair(this.numerator, this.denominator);
 	}
+	
+	/**
+	 * Fuzzy comparison for doubles. Will return true if the absolute difference
+	 * between d1 and d2 is less than 0.00001. Used for comparing values of IntPairs
+	 * @param d1 double first to compare
+	 * @param d2 double second to compare
+	 * @return boolean true if the difference is within the tolerance, false otherwise. 
+	 */
+	public static boolean fuzzyDoubleEquals(double d1, double d2){
+		// Tolerance value used to avoid problems in double equals. 
+		final double TOLERANCE = 0.00001;
+		return Math.abs(d1 - d2) < TOLERANCE;
+	}
 
 }
