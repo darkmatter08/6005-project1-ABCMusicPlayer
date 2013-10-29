@@ -68,7 +68,7 @@ public class VoiceRoadmapUtility {
 		boolean inMulEnding = false;
 		List<Measure> linearTune = new ArrayList<Measure>();
 		
-		while(pointer < queue.size() - 1){
+		while(pointer < queue.size()){
 			
 			Object next;
 			if (inMulEnding)
@@ -77,6 +77,7 @@ public class VoiceRoadmapUtility {
 				next = peek();
 			
 			System.out.println("Element: " + next.toString() + " Pointer: " + pointer);
+			
 			
 			if (next instanceof Measure){
 				linearTune.add((Measure) next);
@@ -87,12 +88,19 @@ public class VoiceRoadmapUtility {
 				if (nextStr.equals(FR)) { /* Skip FR on way in */ }
 				
 				else if (nextStr.equals(BR)){
+					
 					if (inMulEnding)
 						inMulEnding = false;
-					else
+					else{
+						System.out.println("Pre change: "+ queue.get(pointer));
 						changeTo(FR);
+						System.out.println("post change: "+ queue.get(pointer));
+					}
+					System.out.println("pre move pointer " + pointer);
 					movePointerToBeginningOfRepeatSection();
-					System.out.println("back to start of repeat section" + pointer);
+					System.out.println("back to start of repeat section " + pointer);
+					System.out.println("mulending " + inMulEnding);
+					
 				}
 				
 				else if (nextStr.equals(SE)) { /* Skip second ending demarcator */ }
@@ -104,7 +112,7 @@ public class VoiceRoadmapUtility {
 				
 				else if (nextStr.equals(DB)) { /* Skip double bar */ }
 			}
-			
+			pointer++;
 		}
 		
 		return linearTune;
@@ -114,13 +122,14 @@ public class VoiceRoadmapUtility {
 		// pointer remains in place
 		Object next = queue.get(pointer);
 		queue.remove(pointer);
+		pointer--;
 		return next;
 	}
 	
 	private Object peek() {
 		//pointer jumps 1
 		Object next = queue.get(pointer);
-		pointer++;
+		//pointer++;
 		return next;
 	}
 	
@@ -142,7 +151,7 @@ public class VoiceRoadmapUtility {
 	 */
 	private void movePointerToBeginningOfRepeatSection() {
 		int pos; 
-		for(pos = pointer; pos >= 0; pos--){
+		for(pos = pointer - 1; pos >= 0; pos--){
 			Object currentObject = queue.get(pos);
 			if (!(currentObject instanceof Measure)){
 				String currentString = (String) currentObject;
