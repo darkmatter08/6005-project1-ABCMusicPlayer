@@ -38,12 +38,22 @@ public class LyricsListenerHelper {
 				
 				//check for accidentals and octaves
 				//if (note.noteelement().note().noteorrest().pitch() != null){
-				String expression = note.noteelement().note().noteorrest().pitch().getText();
+				String expression = note.noteelement().note().noteorrest().pitch().BASENOTE().getText();
+				int octaves = noteGetOctaves(note.noteelement().note().noteorrest().pitch().OCTAVE().getText());
+				if (expression.matches("[c|d|e|f|g|a|b]")){
+					octaves += -1:
+				}
+				
+				
 				String accidentals = noteGetAccidental(expression);
+				
 				Pitch pitch = new Pitch(noteGetPitch(expression));
 				accidentalsMap.put(pitch.toMidiNote(), accidentals);
-				int octaves = noteGetOctaves(note.noteelement().note().noteorrest().pitch().getText());
+				
+				
+				
 				Note chordNote = new Note(pitch , length);
+				
 				chordNote.setAccidental(accidentalsMap);
 				chordNote.setLyrics(syllableLyric);
 				chord = new Chord(length);
@@ -86,7 +96,7 @@ public class LyricsListenerHelper {
 		 
 		 int octaves = 0;
 		 if (matcher.matches()){
-			 if (matcher.group(1).toString().matches("[c|d|e|f|g|a|b]"){
+			 if (matcher.group(1).toString().matches("[c|d|e|f|g|a|b]")){
 				 octaves += 1;
 			 }
 		 }
