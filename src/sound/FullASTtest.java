@@ -34,10 +34,10 @@ public class FullASTtest {
 		
 		// the first bar
 		Chord chord;
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,1))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('A'), new IntPair(1,1)));	measure.addChord(chord);
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('A'), new IntPair(1,1))); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); Note n = new Note(new Pitch('D'), new IntPair(1,1)); n.setLyrics("A"); chord.addAtom(n); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('D'), new IntPair(1,1)); n.setLyrics("B"); chord.addAtom(n); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('A'), new IntPair(1,1)); n.setLyrics("C"); chord.addAtom(n); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('A'), new IntPair(1,1)); n.setLyrics("D"); chord.addAtom(n); measure.addChord(chord);
 		piece.addMeasure(measure);
 		
 		// the second bar
@@ -136,81 +136,5 @@ public class FullASTtest {
 		
 		System.out.println(piece.toString());
 		PieceWalker.walkPiece(piece);
-
-
-	}
-
-	@Test
-	public void pieceOneTest(){
-		/**
-		 * X: 1
-		 *T:Piece No.1
-		 *M:4/4
-		 *L:1/4
-		 *Q:1/4=140
-		 *K:C
-		 *C C C3/4 D/4 E | E3/4 D/4 E3/4 F/4 G2 | (3CCC/ (3GGG/ (3EEE/ (3CCC/ | G3/4 F/4 E3/4 D/4 C2
-		 */
-		Piece piece = new Piece(KeySignature.C, 140, "Piece No.1");
-		piece.setDefaultLength(1, 4);
-		Measure measure = new Measure();
-		
-		// the first bar
-		Chord chord;
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,1))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,1))); measure.addChord(chord);
-		chord = new Chord(new IntPair(3,4)); chord.addAtom(new Note(new Pitch('C'), new IntPair(3,4)));	measure.addChord(chord);
-		chord = new Chord(new IntPair(1,4)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,1))); measure.addChord(chord);
-		piece.addMeasure(measure);
-		
-		// the second bar
-		measure = new Measure();
-		chord = new Chord(new IntPair(3,4)); chord.addAtom(new Note(new Pitch('E'), new IntPair(3,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,4)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(3,4)); chord.addAtom(new Note(new Pitch('E'), new IntPair(3,4)));	measure.addChord(chord);
-		chord = new Chord(new IntPair(1,4)); chord.addAtom(new Note(new Pitch('F'), new IntPair(1,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(2,1)); chord.addAtom(new Note(new Pitch('G'), new IntPair(2,1))); measure.addChord(chord);
-		piece.addMeasure(measure);
-		
-		// the third bar (3CCC (3GGG (3EEE (3CCC 
-		// (3CCC
-		measure = new Measure();
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3)));	measure.addChord(chord);
-		
-		// (3GGG 
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,3)));	measure.addChord(chord);
-		
-		// (3EEE
-		// the third bar (3CCC (3GGG (3EEE (3CCC 
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('E'), new IntPair(1,3)));	measure.addChord(chord);
-		
-		// (3CCC
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3)));	measure.addChord(chord);
-
-		piece.addMeasure(measure);
-		
-		// the fourth bar G3/4 F/4 E3/4 D/4 C2
-		measure = new Measure();
-		chord = new Chord(new IntPair(3,4)); chord.addAtom(new Note(new Pitch('G'), new IntPair(3,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,4)); chord.addAtom(new Note(new Pitch('F'), new IntPair(1,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(3,4)); chord.addAtom(new Note(new Pitch('E'), new IntPair(3,4)));	measure.addChord(chord);
-		chord = new Chord(new IntPair(1,4)); chord.addAtom(new Note(new Pitch('D'), new IntPair(1,4))); measure.addChord(chord);
-		chord = new Chord(new IntPair(2,1)); chord.addAtom(new Note(new Pitch('C'), new IntPair(2,1))); measure.addChord(chord);
-		piece.addMeasure(measure);
-		
-		System.out.println(piece.toString());
-		ASTListener.ASTplay(piece);
-		
-
-		
 	}
 }
