@@ -34,7 +34,8 @@ public class FullASTtest {
 		
 		// the first bar
 		Chord chord;
-		chord = new Chord(new IntPair(1,1)); Note n = new Note(new Pitch('D'), new IntPair(1,1)); n.setLyrics("A"); chord.addAtom(n); measure.addChord(chord);
+		Note n;
+		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('D'), new IntPair(1,1)); n.setLyrics("A"); chord.addAtom(n); measure.addChord(chord);
 		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('D'), new IntPair(1,1)); n.setLyrics("B"); chord.addAtom(n); measure.addChord(chord);
 		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('A'), new IntPair(1,1)); n.setLyrics("C"); chord.addAtom(n); measure.addChord(chord);
 		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('A'), new IntPair(1,1)); n.setLyrics("D"); chord.addAtom(n); measure.addChord(chord);
@@ -103,9 +104,9 @@ public class FullASTtest {
 		// the third bar (3CCC (3GGG (3EEE (3CCC 
 		// (3CCC
 		measure = new Measure();
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3))); measure.addChord(chord);
-		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C'), new IntPair(1,3)));	measure.addChord(chord);
+		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C').octaveTranspose(1), new IntPair(1,3))); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C').octaveTranspose(1), new IntPair(1,3))); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('C').octaveTranspose(1), new IntPair(1,3)));	measure.addChord(chord);
 		
 		// (3GGG 
 		chord = new Chord(new IntPair(1,3)); chord.addAtom(new Note(new Pitch('G'), new IntPair(1,3))); measure.addChord(chord);

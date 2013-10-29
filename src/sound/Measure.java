@@ -22,8 +22,8 @@ public class Measure implements Sequence {
 	 */
 	public void addChord(Chord c) {
 		// @cr does padding apply to a chord? @see measure.addVoice()
-//		if (this.chords.size() != 0)
-//			assert c.getNumberOfBeats() == this.getNumberOfBeats();
+		if (this.chords.size() != 0)
+			assert IntPair.fuzzyDoubleEquals(c.getNumberOfBeats(), this.getNumberOfBeats());
 		
 		Chord chord = c.clone();
 		
@@ -65,52 +65,59 @@ public class Measure implements Sequence {
 	public String toString(){
 		return this.getSequence().toString();
 	}
-
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = 1;
-//		result = prime * result
-//				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
-//		result = prime * result + ((voices == null) ? 0 : voices.hashCode());
-//		return result;
-//	}
-
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		Measure other = (Measure) obj;
-//		if (shortestLength == null) {
-//			if (other.shortestLength != null)
-//				return false;
-//		} else if (!shortestLength.equals(other.shortestLength))
-//			return false;
-//		if (voices == null) {
-//			if (other.voices != null)
-//				return false;
-//		} else if (!voices.equals(other.voices))
-//			return false;
-//		return true;
-//	}
 	
+	/**
+	 * @see Sequence.java spec
+	 * Eclipse autogen
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((chords == null) ? 0 : chords.hashCode());
+		result = prime * result
+				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see Sequence.java spec
+	 * Eclipse autogen
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Measure other = (Measure) obj;
+		if (chords == null) {
+			if (other.chords != null)
+				return false;
+		} else if (!chords.equals(other.chords))
+			return false;
+		if (shortestLength == null) {
+			if (other.shortestLength != null)
+				return false;
+		} else if (!shortestLength.equals(other.shortestLength))
+			return false;
+		return true;
+	}
+
 	/**
 	 * addVoice() must be called at least once
 	 * See spec in @see Sequence.java
-//	 */
-//	@Override
-//	public int getNumberOfBeats() {
-//		// @cr can a voice end at different time? 
-//		int numberOfBeats = 0;
-//		for(Chord c : this.chords){
-//			numberOfBeats += c.getNumberOfBeats();
-//		}
-//		return numberOfBeats;
-//	}
+	 */
+	@Override
+	public double getNumberOfBeats() { 
+		double numberOfBeats = 0;
+		for(Chord c : this.chords){
+			numberOfBeats += c.getNumberOfBeats();
+		}
+		return numberOfBeats;
+	}
 
 //	@Override
 //	public List<Voice> getUnderlyingRep() {
@@ -120,7 +127,7 @@ public class Measure implements Sequence {
 //		}
 //		return rep;
 //	}
-//	
+	
 	@Override
 	public Measure clone() {
 		Measure clone = new Measure();

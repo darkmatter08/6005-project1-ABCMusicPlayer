@@ -7,7 +7,6 @@ public class Chord implements Sequence{
 	
 	private final List<MusicalAtom> atoms;
 	private final IntPair length;
-	private IntPair shortestLength;
 	
 	/**
 	 * Constructor for Chord
@@ -19,33 +18,24 @@ public class Chord implements Sequence{
 	}
 	
 	/**
-	 * Adds a MusicalAtom to the end of the Chord. 
-	 * @param m Measure to be appended. Must not be null. Must obey the meter
-	 * 	of the piece. 
+	 * Adds a MusicalAtom to the Chord, to be played simultaneously. 
+	 * @param a MusicalAtom to be appended. Must not be null. 
 	 */
 	public void addAtom(MusicalAtom a){
-		MusicalAtom atom = a.clone();
+		// @cr assert that the length of the MusicalAtom is the same as the length
+		assert a.getLength().equals(length);
 		
+		MusicalAtom atom = a.clone();
 		this.atoms.add(atom);
-		if (this.atoms.size() == 1){
-			this.shortestLength = atom.getLength();
-		}
-		else{
-			if (atom.getLength().getValue() < this.shortestLength.getValue()){
-				this.shortestLength = atom.getLength();
-			}
-		}
-	}
-	public List<MusicalAtom> getAtoms(){
-		return this.atoms;
 	}
 	
 	/**
+	 * Will always get the length of the Chord
 	 * @see Sequence.java spec
 	 */
 	@Override
 	public IntPair getShortestLength() {
-		return this.shortestLength;
+		return this.length;
 	}
 	
 	/**
@@ -55,7 +45,7 @@ public class Chord implements Sequence{
 	//@Override
 	public List<MusicalAtom> getSequence() {
 		// @cr needs cloning
-		return getAtoms();
+		return this.atoms;
 	}
 	
 	/**
@@ -63,28 +53,19 @@ public class Chord implements Sequence{
 	 */
 	@Override
 	public String toString(){
-		List<MusicalAtom> sequence = this.getAtoms();
+		List<MusicalAtom> sequence = this.getSequence();
 		return sequence.toString();
 	}
 	
-	/**
-	 * @see Sequence.java spec
-	 * Autogened by Eclipse
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((atoms == null) ? 0 : atoms.hashCode());
-		result = prime * result
-				+ ((shortestLength == null) ? 0 : shortestLength.hashCode());
+		result = prime * result + ((length == null) ? 0 : length.hashCode());
 		return result;
 	}
 	
-	/**
-	 * @see Sequence.java spec
-	 * Autogened by Eclipse
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -99,10 +80,10 @@ public class Chord implements Sequence{
 				return false;
 		} else if (!atoms.equals(other.atoms))
 			return false;
-		if (shortestLength == null) {
-			if (other.shortestLength != null)
+		if (length == null) {
+			if (other.length != null)
 				return false;
-		} else if (!shortestLength.equals(other.shortestLength))
+		} else if (!length.equals(other.length))
 			return false;
 		return true;
 	}
@@ -111,11 +92,11 @@ public class Chord implements Sequence{
 	 * addAtom() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
-//	@Override
-//	public IntPair getNumberOfBeats() {
-//		return atoms.get(0).getLength();
-//	}
-//
+	@Override
+	public double getNumberOfBeats() {
+		return atoms.get(0).getLength().getValue();
+	}
+
 //	@Override
 	public List<MusicalAtom> getUnderlyingRep() {
 		List<MusicalAtom> rep = new ArrayList<MusicalAtom>();
@@ -132,10 +113,5 @@ public class Chord implements Sequence{
 			clone.addAtom(m);
 		}
 		return clone;
-	}
-	
-	public IntPair getLength() {
-		return this.length;
-		}
-	
+	}	
 }
