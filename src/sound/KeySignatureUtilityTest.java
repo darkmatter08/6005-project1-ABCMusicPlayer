@@ -179,5 +179,4 @@ public class KeySignatureUtilityTest {
 			assertTrue(outputPitch.equals(expectedPitchIterator.next()));
 		}
 	}
-
 }

@@ -128,9 +128,12 @@ public final class KeySignatureUtility {
 	public static Pitch getAdjustedPitch(KeySignature s, Pitch rawPitch){
 		assert KEYSIGMAP.containsKey(s);
 		Map<Pitch, Integer> currentKeySig = KEYSIGMAP.get(s);
+		// Since the map contains only pitches in the base octave
+		//	we must get the equivalent pitch in the base octave. 
+		Pitch octaveEquivilant = rawPitch.getBaseOctaveEquivilant();
 		int adjustment = 0;
-		if(currentKeySig.containsKey(rawPitch))
-			adjustment = currentKeySig.get(rawPitch);
+		if(currentKeySig.containsKey(octaveEquivilant))
+			adjustment = currentKeySig.get(octaveEquivilant);
 		Pitch adjustedPitch = rawPitch.accidentalTranspose(adjustment);
 		return adjustedPitch;
 	}
