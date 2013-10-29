@@ -58,11 +58,11 @@ public class Main {
         
         // Walk the tree with the listener.
         ParseTreeWalker walker = new ParseTreeWalker();
-        ParseTreeListener listener = new ABCMusicParserBaseListener();
+        ParseTreeListener listener = new CSTListener();
         walker.walk(listener, tree);
     }
 
     public static void main(String[] args) {
-        play("/Users/Luis/Documents/MIT/Fall 13/6.005/abcplayer/sample_abc/fur_elise.abc");
+        play("./sample_abc/fur_elise.abc");
     }
 }
