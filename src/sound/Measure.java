@@ -16,9 +16,9 @@ public class Measure implements Sequence {
 	}
 	
 	/**
-	 * Adds a voice to this measure. The voice must have the same number of 
-	 * beats per measure as other voices. @cr how will we handle this?
-	 * @param voice The voice to be added to the measure
+	 * Adds a chord to this measure. The chord must have the same number of 
+	 * beats per measure as other chords. @cr how will we handle this?
+	 * @param c The Chord to be added to the measure
 	 */
 	public void addChord(Chord c) {
 		// @cr does padding apply to a chord? @see measure.addVoice()
@@ -43,23 +43,20 @@ public class Measure implements Sequence {
 	 */
 	@Override
 	public IntPair getShortestLength() {
-		// TODO Auto-generated method stub
 		return shortestLength;
 	}
 
 	/**
 	 * @see Sequence.java spec
 	 */
-	//@Override
+	@Override
 	public List<Chord> getSequence() {
 		List<Chord> sequence =  new ArrayList<Chord>();
 		for (Chord chord: this.chords){
-			sequence.add(chord);
-			
+			sequence.add(chord.clone());
 		}
 		return sequence;
 	}
-	
 	
 	/**
 	 * @see Sequence.java spec
@@ -104,20 +101,15 @@ public class Measure implements Sequence {
 	/**
 	 * addVoice() must be called at least once
 	 * See spec in @see Sequence.java
-	 */
+//	 */
 //	@Override
 //	public int getNumberOfBeats() {
 //		// @cr can a voice end at different time? 
-//		Voice maxBeats = this.voices.get(0);
-//		for(Voice voice : this.voices){
-//			if(voice.getNumberOfBeats() > maxBeats.getNumberOfBeats()){
-//				m.getNumberOfBeats();
-//				}
-//			}
-//				maxBeats = voice;
+//		int numberOfBeats = 0;
+//		for(Chord c : this.chords){
+//			numberOfBeats += c.getNumberOfBeats();
 //		}
-//	
-//		return maxBeats.getNumberOfBeats();
+//		return numberOfBeats;
 //	}
 
 //	@Override
@@ -129,13 +121,13 @@ public class Measure implements Sequence {
 //		return rep;
 //	}
 //	
-//	@Override
-//	public Measure clone() {
-//		Measure clone = new Measure();
-//		for (Voice v : this.voices) {
-//			clone.addVoice(v);
-//		}
-//		return clone;
-//	}
+	@Override
+	public Measure clone() {
+		Measure clone = new Measure();
+		for (Chord c : this.chords) {
+			clone.addChord(c);
+		}
+		return clone;
+	}
 	
 }

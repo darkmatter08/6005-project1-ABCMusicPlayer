@@ -19,10 +19,6 @@ public class Voice implements Sequence {
 	 */
 	public Voice() {
 		this.measures = new ArrayList<Measure>();
-		//this.chords = new ArrayList<Chord>();
-	}
-	public int size(){
-		return this.measures.size();
 	}
 	
 	/**
@@ -47,15 +43,23 @@ public class Voice implements Sequence {
 //			}
 //		}
 //	} 
-	public void addMeasure(Measure m){
+	
+	/**
+	 * Adds a measure to this voice. The measure must have the same number of beats
+	 * 	as other measures added to this voice. 
+	 * @param measure The measure to be appended. 
+	 */
+	public void addMeasure(Measure measure){
 		// @cr How will we handle adding in voices that aren't a full measure?
 		//		i.e. who's responsibility is padding the measure?
 		//		If it's the client's, then getNumberOfBeats() doesn't need to 
 		//		search the list for the max. 
-		//if (this.voices.size() != 0)
-		//	assert v.getNumberOfBeats() == this.getNumberOfBeats();
+		
+		// @cr fix this assert once getNumberOfBeats is decided
+//		if (this.measures.size() != 0)
+//			assert measure.getNumberOfBeats() == this.measures.get(0).getNumberOfBeats();
 			
-		//Measure measure = m.clone();
+		Measure m = measure.clone();
 		
 		this.measures.add(m);
 		if (this.measures.size() == 1){
@@ -69,12 +73,11 @@ public class Voice implements Sequence {
 	}
 	
 	/**
-	 * Requires that addChord() be called at least once prior. 
+	 * Requires that addMeasure() be called at least once prior. 
 	 * @see Sequence.java spec
 	 */
 	@Override
 	public IntPair getShortestLength() {
-		// TODO Auto-generated method stub
 		return this.shortestLength;
 	}
 	
@@ -86,13 +89,13 @@ public class Voice implements Sequence {
 		// TODO Auto-generated method stub
 		List<Chord> sequence =  new ArrayList<Chord>();
 		for (Measure m : this.measures){
-			for (Chord c: m.getSequence()){
-				// @cr this should be in parallel at this level, not in a sequence.
+			for (Chord c: m.getSequence()){ //@cr m.getSequence should be returning a clone
 				sequence.add(c);
 			}
 		}
 		return sequence;
 	}
+	
 	/**
 	 * @see Sequence.java spec
 	 */
@@ -142,16 +145,16 @@ public class Voice implements Sequence {
 //	}
 	
 	/**
-	 * addChord() must be called at least once
+	 * addMeasure() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
 //	@Override
 //	public int getNumberOfBeats() {
 //		int numberOfBeats = 0;
-//		for(Chord chord : this.chords){
-//			numberOfBeats += chord.getNumberOfBeats();
+//		for(Measure m : this.measures){
+//			numberOfBeats += m.getNumberOfBeats();
 //		}
-//		return maxBeats.getNumberOfBeats();
+//		return numberOfBeats;
 //	}
 //
 //	@Override

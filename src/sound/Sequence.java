@@ -20,12 +20,13 @@ public interface Sequence extends Cloneable{
 	 * @return List<MusicalAtom> A list of MusicalAtoms that represents
 	 * 	the Sequence. 
 	 */
-	//public List<MusicalAtom> getSequence();  
+	public List<?> getSequence();  
 	
+	// @cr add this for assert statements
 	/**
 	 * @return the maximum number of beats in this sequence 
 	 */
-	//public int getNumberOfBeats();
+	//public IntPair getNumberOfBeats();
 	
 	/**
 	 * The equality method. Two sequences are equal if they are represented by 

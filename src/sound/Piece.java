@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Piece implements Sequence{
-	//private final List<Measure> measures;
 	private final String title;
-	private final Voice voice = new Voice();
-	
-	// @cr Why are so many things initialized to null?
+	private final String RESERVED_DEFAULT_VOICE = "RESERVED_DEFAULT_VOICE";
+
 	// meter.numerator is beats/meter
 	// 1/(meter.denominator) is the note that gets 1 beat
-	private IntPair meter = null; // @cr how come we don't require clients to pass this in? Does it only matter for malformed inputs?
+	private IntPair meter = new IntPair(4,4); // @cr how come we don't require clients to pass this in? Does it only matter for malformed inputs?
 	private IntPair defaultLength = new IntPair(1,1); // @cr how come meter and defaultLength were final?
 	private final int tempo;
 	private final KeySignature keySig;
@@ -34,10 +32,7 @@ public class Piece implements Sequence{
 		this.title = title;
 		//this.measures = new ArrayList<Measure>();
 	}
-	
-//	public void setDefaultLength(int numrator, int denominator){
-//		this.defaultLength = new IntPair(numrator, denominator);
-//	}
+
 	/**
 	 * @cr may need to be removed. 
 	 * @deprecated
@@ -46,6 +41,7 @@ public class Piece implements Sequence{
 	public IntPair getDefaultLength(){
 		return this.defaultLength;
 	}
+	
 	// Constructor that we should be using
 	/**
 	 * Constructor for Piece. 
@@ -61,7 +57,6 @@ public class Piece implements Sequence{
 		this.title = title;
 		this.meter = meter;
 		this.defaultLength = defaultLength;
-		//this.measures = new ArrayList<Measure>();
 	}
 	
 	/**
@@ -74,6 +69,8 @@ public class Piece implements Sequence{
 	
 	/**
 	 * Adds a measure to the end of the Piece. 
+	 * @param voiceString name of the voice that's associated with this measure. 
+	 * 	Must not be equal to "RESERVED_DEFAULT_VOICE" 
 	 * @param m Measure to be appended. Must not be null. Must obey the meter
 	 * 	of the piece. 
 	 */
@@ -81,28 +78,17 @@ public class Piece implements Sequence{
 		// @cr we need an assert showing that m has the correct # of beats
 //		if (this.measures.size() != 0)
 //			assert m.getNumberOfBeats() == this.getNumberOfBeats(); 
-		if (this.measures.size() == 1){
-			this.shortestLength = m.getShortestLength();
-		}
-		else{
-			if (m.getShortestLength().getValue() < this.shortestLength.getValue()){
-				this.shortestLength = m.getShortestLength();
-			}
-		}
-		
 		if (this.voiceMap.containsKey(voiceString)){
-			Voice voice = (Voice) this.voiceMap.get(voiceString);
+			Voice voice = this.voiceMap.get(voiceString);
 			voice.addMeasure(m);
 		}
+		else{
+			Voice newVoice = new Voice();
+			newVoice.addMeasure(m.clone());
+			this.voiceMap.put(voiceString, newVoice);
+		}
 		
-		//else {
-			// this should throw an exception of some type to show that the voice is not found
-		//}
-	}
-
-	public void addMeasure(Measure m){
-		this.voice.addMeasure(m);
-		if (this.voice.size() == 1){
+		if (this.voiceMap.size() == 1){
 			this.shortestLength = m.getShortestLength();
 		}
 		else{
@@ -110,38 +96,37 @@ public class Piece implements Sequence{
 				this.shortestLength = m.getShortestLength();
 			}
 		}
-	}	
+		
+	}
+	
+	/**
+	 * Append a measure to this piece. Only one of the addMeasure() methods can be called over the 
+	 * 	lifetime of this Piece Object. 
+	 * @param m Measure to add to the Piece
+	 */
+	public void addMeasure(Measure m) {
+		addMeasure(RESERVED_DEFAULT_VOICE, m);
+	}
+	
 	/**
 	 * Gets the key signature of the Piece
 	 * @return KeySignature the KeySignature enum type that represents the
 	 * 	key signature.
 	 */
-	public KeySignature getKeySig(){
-		return this.keySig;//This get method will be used to get the keySig attribute
+	public KeySignature getKeySig() {
+		return this.keySig;
 	}
+	
 	/**
-	 * @return List<MusicalAtom> returns a sequence of MusicalAtoms that 
-	 * represent the song's notes and rests. 
-	 */
-// @old implementation
-//	@Override
-//	public List<MusicalAtom> getSequence(){
-//		List<MusicalAtom> sequence =  new ArrayList<MusicalAtom>();
-//		for (Measure measure: this.measures){
-//			for (MusicalAtom atom: measure.getSequence()){
-//				sequence.add(atom);
-//			}
-//		}
-//		return sequence;
-//	}
-	
-	public List<Chord> getSequence(){
-		return this.voice.getSequence();
-	}
-	
-	public List<Chord> getSequence(String voiceString){
-		return ((Voice) this.voiceMap.get(voiceString)).getSequence();
-		
+	 * @return List<List<Chord>> returns a sequence of that represent the song's 
+	 * notes and rests. Each List contains a List<Chord> of all Chords associated with a voice. 
+	 */	
+	public List<List<Chord>> getSequence() {
+		List<List<Chord>> sequence =  new ArrayList<List<Chord>>(); 
+		for (Voice v : this.voiceMap.values()){ // v.getSequence should be returning a clone.
+			sequence.add(v.getSequence());
+		}
+		return sequence;
 	}
 	
 	/**
@@ -152,8 +137,7 @@ public class Piece implements Sequence{
 	@Override
 	public IntPair getShortestLength() {
 		// verify that addMeasure() has been called at least once
-		assert this.measures.size() > 0; 
-		// TODO Auto-generated method stub 
+		assert this.voiceMap.size() > 0; 
 		return this.shortestLength;
 	}
 	
@@ -165,16 +149,27 @@ public class Piece implements Sequence{
 		return this.getSequence().toString();
 	}
 	
+//	/**
+//	 * @cr implement later
+//	 */
+//	@Override
+//	public int hashCode(){
+//		
+//		return 0
+//	}
+	
 	/**
 	 * addMeasure() must be called at least once
 	 * See spec in @see Sequence.java
 	 */
 //	@Override
 //	public int getNumberOfBeats() {
-//		int result = 0;
-//		for(Measure measure: this.measures){
-//			result += measure.getNumberOfBeats();
+//		double result = 0;
+//		for(Voice v: this.voiceMap.values()){
+//			result += v.getNumberOfBeats();
 //		}
+//		result += this.voice.getNumberOfBeats();
+//
 //		return result;
 //	}
 
@@ -187,12 +182,17 @@ public class Piece implements Sequence{
 //		return rep;
 //	}
 	
-	@Override
-	public Piece clone() {
-		Piece clone = new Piece(this.keySig, this.tempo, this.title, this.meter.clone(), this.defaultLength.clone());
-		for (Measure m : this.measures) {
-			clone.addMeasure(m);
-		}
-		return clone;
-	}
+	/**
+	 * @cr fix this later
+	 */
+//	@Override
+//	public Piece clone() {
+//		Piece clone = new Piece(this.keySig, this.tempo, this.title, this.meter.clone(), this.defaultLength.clone());
+//		Map<String, Voice> cloneMap = new HashMap<String, Voice>();
+//		for (String key : this.voiceMap.keySet()) {
+//			clone.addMeasure(key, voiceMap.get(key).clone());
+//		}
+//		
+//		return clone;
+//	}
 }

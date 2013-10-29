@@ -53,10 +53,9 @@ public class Chord implements Sequence{
 	 * @see Sequence.java spec
 	 */
 	//@Override
-	public List<Chord> getSequence() {
-		List<Chord> sequence =  new ArrayList<Chord>();
-		sequence.add(this);
-		return sequence;
+	public List<MusicalAtom> getSequence() {
+		// @cr needs cloning
+		return getAtoms();
 	}
 	
 	/**
@@ -113,8 +112,8 @@ public class Chord implements Sequence{
 	 * See spec in @see Sequence.java
 	 */
 //	@Override
-//	public int getNumberOfBeats() {
-//		return atoms.size();
+//	public IntPair getNumberOfBeats() {
+//		return atoms.get(0).getLength();
 //	}
 //
 //	@Override
