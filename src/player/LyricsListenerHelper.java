@@ -29,7 +29,7 @@ public class LyricsListenerHelper {
 				return new IntPair(1, 2);
 			}
 			int num = Integer.parseInt(ctx.getChild(0).getText());
-			return new IntPair(num, 2);
+			return new IntPair(num, 1);
 		}
 		else{
 			if (ctx.getChildCount() == 3){

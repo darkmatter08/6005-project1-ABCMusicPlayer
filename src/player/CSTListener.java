@@ -207,7 +207,7 @@ public class CSTListener implements ABCMusicParserListener{
 				this.defaultNoteLength = new IntPair(1,8);
 			}
 		}
-
+		
 		this.piece = new Piece(Key, tempo, title, meter, this.defaultNoteLength);
 		
 	}
@@ -322,13 +322,13 @@ public class CSTListener implements ABCMusicParserListener{
 					Note note = new Note(pitch, length);
 					chord = new Chord(note.getLength());
 					chord.addAtom(note);
-					System.out.println("added this note:" + ctx.note().noteorrest().pitch().BASENOTE().getText());
+					System.out.println("added this note:" + ctx.note().noteorrest().pitch().BASENOTE().getText() + note.getLength().getValue());
 				}
 				if(ctx.note().noteorrest().REST() != null){
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
 					chord.addAtom(rest);
-					System.out.println("added this note:" + ctx.note().noteorrest().REST().getText());
+					System.out.println("added this note:" + ctx.note().noteorrest().REST().getText() + rest.getLength().getValue());
 				}
 			}
 		}
@@ -344,7 +344,7 @@ public class CSTListener implements ABCMusicParserListener{
 				chord.addAtom(LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(i), this.defaultNoteLength));
 			}
 		}
-		
+
 		measureAtoms.add(chord);
 		
 	}
