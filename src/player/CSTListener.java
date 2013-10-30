@@ -280,30 +280,14 @@ public class CSTListener implements ABCMusicParserListener{
 	@Override
 	public void enterTupletelement(TupletelementContext ctx) {
 		int tupletLength = 0;
-		int numerator;
-		int denominator;
 		if (ctx.tupletspec() != null){
 			tupletLength = Integer.parseInt(ctx.tupletspec().NUMBER().getText());
 		}
-		if (tupletLength == 1){
-			numerator = 1;
-			denominator = 1;
-		}
-		if (tupletLength == 2){
-			numerator = 3;
-			denominator = 2;
-		}
-		if (tupletLength == 3){
-			numerator = 2;
-			denominator = 3;
-		}
-		if (tupletLength == 4){
-			numerator = 3;
-			denominator = 4;
-		}
 		
 		List<NoteelementContext> noteelements = ctx.noteelement();
-		
+		for(NoteelementContext cntxt : noteelements){
+			measureAtoms.add(LyricsListenerHelper.tupletElementHelper(cntxt, this.defaultNoteLength, tupletLength));
+		}
 		
 		
 	}
@@ -320,8 +304,10 @@ public class CSTListener implements ABCMusicParserListener{
 		if (ctx.note() != null){
 			IntPair length;
 			if (ctx.note().notelength().getChildCount() != 0){
-				String expression = ctx.note().notelength().getText();
-				length = LyricsListenerHelper.noteGetPair(expression);
+				IntPair multiplier = LyricsListenerHelper.noteGetLength(ctx.note().notelength());
+				int numerator = multiplier.numerator;
+				int denominator = multiplier.denominator;
+				length = new IntPair(this.defaultNoteLength.numerator * numerator, this.defaultNoteLength.denominator * denominator);
 			}
 			else{
 				length = this.defaultNoteLength;
@@ -339,7 +325,6 @@ public class CSTListener implements ABCMusicParserListener{
 					System.out.println("added this note:" + ctx.note().noteorrest().pitch().BASENOTE().getText());
 				}
 				if(ctx.note().noteorrest().REST() != null){
-					String expression = ctx.note().noteorrest().REST().getText();
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
 					chord.addAtom(rest);
@@ -350,10 +335,13 @@ public class CSTListener implements ABCMusicParserListener{
 		
 		if (ctx.multinote() != null){
 			List<NoteContext> cntxt = ctx.multinote().note();
-			IntPair length = LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(0)).getLength();
+			IntPair multiplier = LyricsListenerHelper.noteGetLength(cntxt.get(0).notelength());
+			int numerator = multiplier.numerator;
+			int denominator = multiplier.denominator;
+			IntPair length = new IntPair(this.defaultNoteLength.numerator * numerator, this.defaultNoteLength.denominator * denominator);
 			chord = new Chord(length);
-			for(int i = 1; i < cntxt.size(); i++){
-				chord.addAtom(LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(i)));
+			for(int i = 0; i < cntxt.size(); i++){
+				chord.addAtom(LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(i), this.defaultNoteLength));
 			}
 		}
 		
