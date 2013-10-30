@@ -63,6 +63,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        play("./sample_abc/fur_elise.abc");
+        play("./sample_abc/abc_song.abc");
     }
 }
