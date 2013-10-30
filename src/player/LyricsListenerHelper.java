@@ -43,7 +43,7 @@ public class LyricsListenerHelper {
 				String expression = note.noteelement().note().noteorrest().pitch().BASENOTE().getText();
 				int octaves = noteGetOctaves(note.noteelement().note().noteorrest().pitch().OCTAVE().getText());
 				if (expression.matches("[c|d|e|f|g|a|b]")){
-					octaves += -1:
+					octaves += -1;
 				}
 				
 				
@@ -56,7 +56,7 @@ public class LyricsListenerHelper {
 				
 				Note chordNote = new Note(pitch , length);
 				
-				chordNote.setAccidental(accidentalsMap);
+				//chordNote.setAccidental(accidentalsMap);
 				chordNote.setLyrics(syllableLyric);
 				chord = new Chord(length);
 				chord.addAtom(chordNote);
@@ -163,6 +163,7 @@ public class LyricsListenerHelper {
 		
 		throw new NumberFormatException();
 	}
+
 	public static MusicalAtom chordMultiNoteHelper(NoteContext ctx) {
 		MusicalAtom atom = null;
 		if (ctx != null){
@@ -197,5 +198,28 @@ public class LyricsListenerHelper {
 			}
 		}
 		return atom;
+	}
+	
+	public static List<String> breakLyrics(String Lyrics){
+		List<String> lyricList = new ArrayList<String>();
+		Lyrics = Lyrics.replace("*", "- -");
+		String [] lyricArray = Lyrics.split("\\s|\\-");
+		
+		for (String syllable : lyricArray){
+			if (syllable.indexOf('_') !=  -1){
+				while (syllable.indexOf('_') != -1){
+					syllable = syllable.replaceAll("_", "-"+ syllable.substring(0, syllable.indexOf('_') ));
+				}
+				String [] repeatedSyllables = syllable.split("-");
+				for (String repeatedSyllable: repeatedSyllables){
+					lyricList.add(repeatedSyllable);
+				}
+			}
+			else{
+				lyricList.add(syllable);
+			}
+		}
+		return lyricList;
+
 	}
 }
