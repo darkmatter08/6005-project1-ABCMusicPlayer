@@ -227,7 +227,29 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterTupletelement(TupletelementContext ctx) {
-		// TODO Auto-generated method stub
+		int tupletLength = 0;
+		int numerator;
+		int denominator;
+		if (ctx.tupletspec() != null){
+			tupletLength = Integer.parseInt(ctx.tupletspec().NUMBER().getText());
+		}
+		if (tupletLength == 1){
+			numerator = 1;
+			denominator = 1;
+		}
+		if (tupletLength == 2){
+			numerator = 3;
+			denominator = 2;
+		}
+		if (tupletLength == 3){
+			numerator = 2;
+			denominator = 3;
+		}
+		if (tupletLength == 4){
+			numerator = 3;
+			denominator = 4;
+		}
+		
 		
 	}
 
