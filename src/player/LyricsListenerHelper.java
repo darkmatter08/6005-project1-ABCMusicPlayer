@@ -21,12 +21,15 @@ import java.util.regex.Pattern;
 public class LyricsListenerHelper {
 	
 	public static IntPair noteGetLength(NotelengthContext ctx) {
-		if (ctx.getChildCount() == 1){
+		if (ctx.getChildCount() == 0){
+			return new IntPair(1,1);
+		}
+		else if (ctx.getChildCount() == 1){
 			if (ctx.FRACTIONBAR() != null){
 				return new IntPair(1, 2);
 			}
 			int num = Integer.parseInt(ctx.getChild(0).getText());
-			return new IntPair(num, 2);
+			return new IntPair(num, 1);
 		}
 		else{
 			if (ctx.getChildCount() == 3){
@@ -133,30 +136,30 @@ public class LyricsListenerHelper {
 		throw new NumberFormatException();
 	}
 
-	public static MusicalAtom chordMultiNoteHelper(NoteContext ctx) {
+	public static MusicalAtom chordMultiNoteHelper(NoteContext ctx, IntPair defaultLength) {
 		MusicalAtom atom = null;
 		if (ctx != null) {
 			IntPair length;
-			if (ctx.notelength() != null) {
+			if (ctx.notelength().getChildCount() != 0) {
 				//String expression = ctx.notelength().getText();
-				length = LyricsListenerHelper.noteGetLength(ctx.notelength());
+				IntPair multiplier = LyricsListenerHelper.noteGetLength(ctx.notelength());
+				int numerator = multiplier.numerator;
+				int denominator = multiplier.denominator;
+				length = new IntPair(defaultLength.numerator * numerator, defaultLength.denominator * denominator);
 			} else {
-				length = new IntPair(1, 1);
+				length = defaultLength;
 			}
 
 			if (ctx.noteorrest() != null) {
 				if (ctx.noteorrest().pitch() != null) {
-					String expression = ctx.noteorrest().pitch().getText();
 					//String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
 					int octaves = LyricsListenerHelper.noteGetOctaves(ctx.noteorrest().pitch());
-					Pitch pitch = new Pitch(
-							LyricsListenerHelper.noteGetPitch(expression));
+					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(ctx.noteorrest().pitch().BASENOTE().getText()));
 					pitch.octaveTranspose(octaves);
 					Note note = new Note(pitch, length);
 					return note;
 				}
 				if (ctx.noteorrest().REST() != null) {
-					String expression = ctx.noteorrest().REST().getText();
 					Rest rest = new Rest(length);
 					return rest;
 
@@ -187,5 +190,71 @@ public class LyricsListenerHelper {
 		}
 		return lyricList;
 
+	}
+	
+	public static Chord tupletElementHelper(NoteelementContext ctx, IntPair defaultLength, int tupletSpec) {
+		Chord chord = null;
+		int tupletNumerator = 0;
+		int tupletDenominator = 0;
+		
+		if (tupletSpec == 1){
+			tupletNumerator = 1;
+			tupletDenominator = 1;
+		}
+		if (tupletSpec == 2){
+			tupletNumerator = 3;
+			tupletDenominator = 2;
+		}
+		if (tupletSpec == 3){
+			tupletNumerator = 2;
+			tupletDenominator = 3;
+		}
+		if (tupletSpec == 4){
+			tupletNumerator = 3;
+			tupletDenominator = 4;
+		}
+		
+		if (ctx.note() != null){
+			IntPair length;
+			if (ctx.note().notelength().getChildCount() != 0){
+				IntPair multiplier = LyricsListenerHelper.noteGetLength(ctx.note().notelength());
+				int numerator = multiplier.numerator;
+				int denominator = multiplier.denominator;
+				length = new IntPair(defaultLength.numerator * numerator * tupletNumerator, defaultLength.denominator * denominator * tupletDenominator);
+			}
+			else{
+				int numerator = defaultLength.numerator;
+				int denominator = defaultLength.denominator;
+				length = new IntPair(numerator * tupletNumerator, denominator * tupletDenominator);
+			}
+			
+			if (ctx.note().noteorrest().pitch() != null){
+				//String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+				int octaves = LyricsListenerHelper.noteGetOctaves(ctx.note().noteorrest().pitch());
+				Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(ctx.note().noteorrest().pitch().BASENOTE().getText()));
+				pitch.octaveTranspose(octaves);
+				Note note = new Note(pitch, length);
+				chord = new Chord(note.getLength());
+				chord.addAtom(note);
+				return chord;
+			}
+
+		}
+		
+		if (ctx.multinote() != null){
+			List<NoteContext> cntxt = ctx.multinote().note();
+			IntPair multiplier = LyricsListenerHelper.noteGetLength(cntxt.get(0).notelength());
+			int numerator = multiplier.numerator * tupletNumerator;
+			int denominator = multiplier.denominator * tupletDenominator;
+			IntPair length = new IntPair(defaultLength.numerator * numerator, defaultLength.denominator * denominator);
+			chord = new Chord(length);
+			for(int i = 0; i < cntxt.size(); i++){
+				chord.addAtom(LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(i), defaultLength));
+			}
+			return chord;
+		}
+		
+		return chord;
+		
 	}
 }
