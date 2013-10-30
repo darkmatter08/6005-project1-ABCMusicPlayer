@@ -46,7 +46,7 @@ public class CSTListener implements ABCMusicParserListener{
 	Queue<Object> measureAtoms = new LinkedList<Object>();
 	@Override
 	public void enterEveryRule(ParserRuleContext arg0) {
-		// TODO Auto-generated method stub	
+		System.out.println("Entering: "+ arg0.getClass().toString() + '\n' + arg0.getText());
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class CSTListener implements ABCMusicParserListener{
 			int denom = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(4,5));
 			defaultLength = new IntPair(num, denom);
 		}
-		System.out.print(Key +"\n" + tempo + "\n" + title + "\n" + meter.getValue() + "\n" + defaultLength.getValue());	
+		
 		Piece piece = new Piece(Key, tempo, title, meter, defaultLength);
 		
 	}
@@ -251,6 +251,8 @@ public class CSTListener implements ABCMusicParserListener{
 		}
 		
 		
+		
+		
 	}
 
 	@Override
@@ -264,8 +266,9 @@ public class CSTListener implements ABCMusicParserListener{
 		Chord chord = null;
 		if (ctx.note() != null){
 			IntPair length;
-			if (ctx.note().notelength() != null){
+			if (ctx.note().notelength().getChildCount() != 0){
 				String expression = ctx.note().notelength().getText();
+				System.out.println("First: "+expression);
 				length = LyricsListenerHelper.noteGetPair(expression);
 			}
 			else{
@@ -274,10 +277,9 @@ public class CSTListener implements ABCMusicParserListener{
 			
 			if (ctx.note().noteorrest() != null){
 				if (ctx.note().noteorrest().pitch() != null){
-					String expression = ctx.note().noteorrest().pitch().getText();
-					String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
-					int octaves = LyricsListenerHelper.noteGetOctaves(expression);
-					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(expression));
+					//String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+					int octaves = LyricsListenerHelper.noteGetOctaves(ctx.note().noteorrest().pitch());
+					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(ctx.note().noteorrest().pitch().BASENOTE().getText()));
 					pitch.octaveTranspose(octaves);
 					Note note = new Note(pitch, length);
 					chord = new Chord(note.getLength());
