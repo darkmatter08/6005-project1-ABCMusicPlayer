@@ -2,9 +2,11 @@ package player;
 import sound.Measure;
 import sound.Chord;
 import sound.IntPair;
+import sound.MusicalAtom;
 import sound.Note;
 import sound.Piece;
 import sound.Pitch;
+import sound.Rest;
 import grammar.ABCMusicParser.*;
 
 import java.util.ArrayList;
@@ -160,4 +162,40 @@ public class LyricsListenerHelper {
 		}
 		
 		throw new NumberFormatException();
-	}}
+	}
+	public static MusicalAtom chordMultiNoteHelper(NoteContext ctx) {
+		MusicalAtom atom = null;
+		if (ctx != null){
+			IntPair length;
+			if (ctx.notelength() != null){
+				String expression = ctx.notelength().getText();
+				length = LyricsListenerHelper.noteGetPair(expression);
+			}
+			else{
+				length = new IntPair(1,1);
+			}
+			
+			if (ctx.noteorrest() != null){
+				if (ctx.noteorrest().pitch() != null){
+					String expression = ctx.noteorrest().pitch().getText();
+					String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+					int octaves = LyricsListenerHelper.noteGetOctaves(expression);
+					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(expression));
+					pitch.octaveTranspose(octaves);
+					Note note = new Note(pitch, length);
+					return note;
+					
+					
+				}
+				if(ctx.noteorrest().REST() != null){
+					String expression = ctx.noteorrest().REST().getText();
+					Rest rest = new Rest(length);
+					return rest;
+					
+					
+				}
+			}
+		}
+		return atom;
+	}
+}
