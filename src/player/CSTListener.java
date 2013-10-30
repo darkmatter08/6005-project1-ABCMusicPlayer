@@ -198,7 +198,6 @@ public class CSTListener implements ABCMusicParserListener{
 			int num = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(2,3));
 			int denom = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(4,5));
 			this.defaultNoteLength = new IntPair(num, denom);
-			this.piece = new Piece(Key, tempo, title, meter, this.defaultNoteLength);
 		}
 		else{
 			if (meter.getValue() < 0.75){
@@ -207,9 +206,9 @@ public class CSTListener implements ABCMusicParserListener{
 			else{
 				this.defaultNoteLength = new IntPair(1,8);
 			}
-			this.piece = new Piece(Key, tempo, title, meter, this.defaultNoteLength);
 		}
-		
+
+		this.piece = new Piece(Key, tempo, title, meter, this.defaultNoteLength);
 		
 	}
 
