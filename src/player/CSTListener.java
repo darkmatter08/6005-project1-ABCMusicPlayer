@@ -1,6 +1,8 @@
 package player;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.management.Query;
@@ -9,10 +11,14 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import sound.Chord;
 import sound.IntPair;
 import sound.KeySignature;
+import sound.MusicalAtom;
+import sound.Note;
 import sound.Piece;
-
+import sound.Pitch;
+import sound.Rest;
 import grammar.ABCMusicParser.AbcbodyContext;
 import grammar.ABCMusicParser.AbcheaderContext;
 import grammar.ABCMusicParser.AbctuneContext;
@@ -30,13 +36,14 @@ import grammar.ABCMusicParser.TupletelementContext;
 import grammar.ABCMusicParser.TupletspecContext;
 import grammar.ABCMusicParserBaseListener;
 import grammar.ABCMusicParserListener;
-
+import player.LyricsListenerHelper;
 public class CSTListener implements ABCMusicParserListener{
 	Piece piece;
+	
 	Queue<String> voices = new LinkedList<String>() ;
 	Queue<String> notes = new LinkedList<String>();
 	Queue<String> lyrics = new LinkedList<String>();
-	
+	Queue<Object> measureAtoms = new LinkedList<Object>();
 	@Override
 	public void enterEveryRule(ParserRuleContext arg0) {
 		// TODO Auto-generated method stub	
@@ -220,7 +227,29 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterTupletelement(TupletelementContext ctx) {
-		// TODO Auto-generated method stub
+		int tupletLength = 0;
+		int numerator;
+		int denominator;
+		if (ctx.tupletspec() != null){
+			tupletLength = Integer.parseInt(ctx.tupletspec().NUMBER().getText());
+		}
+		if (tupletLength == 1){
+			numerator = 1;
+			denominator = 1;
+		}
+		if (tupletLength == 2){
+			numerator = 3;
+			denominator = 2;
+		}
+		if (tupletLength == 3){
+			numerator = 2;
+			denominator = 3;
+		}
+		if (tupletLength == 4){
+			numerator = 3;
+			denominator = 4;
+		}
+		
 		
 	}
 
@@ -232,7 +261,45 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterNoteelement(NoteelementContext ctx) {
-		// TODO Auto-generated method stub
+		Chord chord = null;
+		if (ctx.note() != null){
+			IntPair length;
+			if (ctx.note().notelength() != null){
+				String expression = ctx.note().notelength().getText();
+				length = LyricsListenerHelper.noteGetPair(expression);
+			}
+			else{
+				length = new IntPair(1,1);
+			}
+			
+			if (ctx.note().noteorrest() != null){
+				if (ctx.note().noteorrest().pitch() != null){
+					String expression = ctx.note().noteorrest().pitch().getText();
+					String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+					int octaves = LyricsListenerHelper.noteGetOctaves(expression);
+					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(expression));
+					pitch.octaveTranspose(octaves);
+					Note note = new Note(pitch, length);
+					chord = new Chord(note.getLength());
+				}
+				if(ctx.note().noteorrest().REST() != null){
+					String expression = ctx.note().noteorrest().REST().getText();
+					Rest rest = new Rest(length);
+					chord = new Chord(rest.getLength());
+				}
+			}
+		}
+		
+		if (ctx.multinote() != null){
+			List<NoteContext> cntxt = ctx.multinote().note();
+			IntPair length = LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(0)).getLength();
+			chord = new Chord(length);
+			for(int i = 1; i < cntxt.size(); i++){
+				chord.addAtom(LyricsListenerHelper.chordMultiNoteHelper(cntxt.get(i)));
+			}
+		}
+		
+		measureAtoms.add(chord);
 		
 	}
 
@@ -245,9 +312,6 @@ public class CSTListener implements ABCMusicParserListener{
 	@Override
 	public void enterPitch(PitchContext ctx) {
 		// TODO Auto-generated method stub
-		String pitch = ctx.getText().replace("\n", "");
-		notes.add(pitch);
-		System.out.println("added to notes quoe ->" + pitch);
 		
 	}
 
@@ -259,8 +323,7 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterNote(NoteContext ctx) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
