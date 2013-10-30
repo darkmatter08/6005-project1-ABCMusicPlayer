@@ -14,9 +14,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import sound.Chord;
 import sound.IntPair;
 import sound.KeySignature;
+import sound.Measure;
 import sound.MusicalAtom;
 import sound.Note;
 import sound.Piece;
+import sound.PieceWalker;
 import sound.Pitch;
 import sound.Rest;
 import grammar.ABCMusicParser.AbcbodyContext;
@@ -46,7 +48,7 @@ public class CSTListener implements ABCMusicParserListener{
 	Queue<Object> measureAtoms = new LinkedList<Object>();
 	@Override
 	public void enterEveryRule(ParserRuleContext arg0) {
-		// TODO Auto-generated method stub	
+		System.out.println("Entering: "+ arg0.getClass().toString() + '\n' + arg0.getText());
 	}
 
 	@Override
@@ -195,8 +197,8 @@ public class CSTListener implements ABCMusicParserListener{
 			int denom = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(4,5));
 			defaultLength = new IntPair(num, denom);
 		}
-		System.out.print(Key +"\n" + tempo + "\n" + title + "\n" + meter.getValue() + "\n" + defaultLength.getValue());	
-		Piece piece = new Piece(Key, tempo, title, meter, defaultLength);
+		
+		this.piece = new Piece(Key, tempo, title, meter, defaultLength);
 		
 	}
 
@@ -222,7 +224,15 @@ public class CSTListener implements ABCMusicParserListener{
 	public void exitBodysection(BodysectionContext ctx) {
 		// TODO Auto-generated method stub
 		// Ideally the stacks should be processed here and new the bulk of the AST building performed
-		
+		Measure m = new Measure();
+		System.out.println("size" + measureAtoms.size());
+		while (!(this.measureAtoms.isEmpty())){
+			Chord c = (Chord) this.measureAtoms.poll();
+			m.addChord(c);		
+		}
+		System.out.println("this is the measure " + m.toString());
+		piece.addMeasure(m);
+		PieceWalker.walkPiece(piece);
 	}
 
 	@Override
@@ -250,6 +260,9 @@ public class CSTListener implements ABCMusicParserListener{
 			denominator = 4;
 		}
 		
+		List<NoteelementContext> noteelements = ctx.noteelement();
+		
+		
 		
 	}
 
@@ -264,8 +277,9 @@ public class CSTListener implements ABCMusicParserListener{
 		Chord chord = null;
 		if (ctx.note() != null){
 			IntPair length;
-			if (ctx.note().notelength() != null){
+			if (ctx.note().notelength().getChildCount() != 0){
 				String expression = ctx.note().notelength().getText();
+				System.out.println("First: "+expression);
 				length = LyricsListenerHelper.noteGetPair(expression);
 			}
 			else{
@@ -274,18 +288,19 @@ public class CSTListener implements ABCMusicParserListener{
 			
 			if (ctx.note().noteorrest() != null){
 				if (ctx.note().noteorrest().pitch() != null){
-					String expression = ctx.note().noteorrest().pitch().getText();
-					String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
-					int octaves = LyricsListenerHelper.noteGetOctaves(expression);
-					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(expression));
+					//String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+					int octaves = LyricsListenerHelper.noteGetOctaves(ctx.note().noteorrest().pitch());
+					Pitch pitch = new Pitch(LyricsListenerHelper.noteGetPitch(ctx.note().noteorrest().pitch().BASENOTE().getText()));
 					pitch.octaveTranspose(octaves);
 					Note note = new Note(pitch, length);
 					chord = new Chord(note.getLength());
+					chord.addAtom(note);
 				}
 				if(ctx.note().noteorrest().REST() != null){
 					String expression = ctx.note().noteorrest().REST().getText();
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
+					chord.addAtom(rest);
 				}
 			}
 		}
