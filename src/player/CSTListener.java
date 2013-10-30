@@ -71,14 +71,14 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterElement(ElementContext ctx) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
-
 	@Override
 	public void exitElement(ElementContext ctx) {
-		// TODO Auto-generated method stub
-		
+		if (ctx.BARLINE() != null){
+			System.out.println("Added a barline to measure atoms:"+ ctx.getText());
+			measureAtoms.add(ctx.BARLINE().getText());
+		}
 	}
 
 	@Override
@@ -108,7 +108,6 @@ public class CSTListener implements ABCMusicParserListener{
 	@Override
 	public void enterAbcbody(AbcbodyContext ctx) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -217,7 +216,13 @@ public class CSTListener implements ABCMusicParserListener{
 	@Override
 	public void enterBodysection(BodysectionContext ctx) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("scanning lyrics");
+		if (ctx.LYRIC() != null){
+			for (String lyric : LyricsListenerHelper.breakLyrics(ctx.LYRIC().getText().substring(2))){
+				this.lyrics.add(lyric);
+			}
+			System.out.println("put thes lyrics on the stack:" + LyricsListenerHelper.breakLyrics(ctx.LYRIC().getText().toString().substring(2)));
+		}
 	}
 
 	@Override
@@ -225,9 +230,22 @@ public class CSTListener implements ABCMusicParserListener{
 		// TODO Auto-generated method stub
 		// Ideally the stacks should be processed here and new the bulk of the AST building performed
 		Measure m = new Measure();
+		boolean holdLyrics = false;
 		System.out.println("size" + measureAtoms.size());
 		while (!(this.measureAtoms.isEmpty())){
+			Object atom = this.measureAtoms.poll();
+			String lyric = this.lyrics.poll();
+			if (lyric.equals("|")){
+				holdLyrics = true;
+			}
+			if (atom.equals("|")){
+				piece.addMeasure(m);
+				m = new Measure();
+			}
 			Chord c = (Chord) this.measureAtoms.poll();
+			if (holdLyrics == false){
+				c.addLyrics(lyric); 
+			}
 			m.addChord(c);		
 		}
 		System.out.println("this is the measure " + m.toString());

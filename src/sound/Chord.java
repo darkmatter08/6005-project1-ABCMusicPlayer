@@ -113,5 +113,14 @@ public class Chord implements Sequence{
 			clone.addAtom(m);
 		}
 		return clone;
+	}
+
+	/*
+	 * the cord set the lyrics to its first note
+	 */
+	public void addLyrics(String lyric) {
+		// TODO Auto-generated method stub
+		//this.atoms.get(0).;
+		
 	}	
 }
