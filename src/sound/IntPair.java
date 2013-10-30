@@ -1,5 +1,11 @@
 package sound;
 
+/**
+ * Class to represent a pair of integers, usually to
+ * 	represent a fraction.
+ * @author jains
+ *
+ */
 public class IntPair implements Comparable, Cloneable {
 	public final int numerator;
     public final int denominator; 
@@ -72,15 +78,25 @@ public class IntPair implements Comparable, Cloneable {
 	
 	/**
 	 * Fuzzy comparison for doubles. Will return true if the absolute difference
-	 * between d1 and d2 is less than 0.00001. Used for comparing values of IntPairs
+	 * between d1 and d2 is less than tolerance. Used for comparing values of IntPairs
 	 * @param d1 double first to compare
 	 * @param d2 double second to compare
+	 * @param tolerance the tolerance value
 	 * @return boolean true if the difference is within the tolerance, false otherwise. 
+	 */
+	public static boolean fuzzyDoubleEquals(double d1, double d2, double tolerance){
+		return Math.abs(d1 - d2) < tolerance;
+	}
+	
+	/**
+	 Shortcut method for fuzzyDoubleEquals, assuming the Tolerance is 0.00001 
 	 */
 	public static boolean fuzzyDoubleEquals(double d1, double d2){
 		// Tolerance value used to avoid problems in double equals. 
 		final double TOLERANCE = 0.00001;
-		return Math.abs(d1 - d2) < TOLERANCE;
+		return fuzzyDoubleEquals(d1, d2, TOLERANCE);
 	}
+	
+	
 
 }
