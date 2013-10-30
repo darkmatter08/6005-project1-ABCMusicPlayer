@@ -136,5 +136,10 @@ public class Measure implements Sequence {
 		}
 		return clone;
 	}
+
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return this.chords.size()==0;
+	}
 	
 }

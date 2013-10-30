@@ -48,7 +48,7 @@ public class CSTListener implements ABCMusicParserListener{
 	Queue<Object> measureAtoms = new LinkedList<Object>();
 	@Override
 	public void enterEveryRule(ParserRuleContext arg0) {
-		System.out.println("Entering: "+ arg0.getClass().toString() + '\n' + arg0.getText());
+		//System.out.println("Entering: "+ arg0.getClass().toString() + '\n' + arg0.getText());
 	}
 
 	@Override
@@ -230,26 +230,38 @@ public class CSTListener implements ABCMusicParserListener{
 		// TODO Auto-generated method stub
 		// Ideally the stacks should be processed here and new the bulk of the AST building performed
 		Measure m = new Measure();
+		String lyric = null;
 		boolean holdLyrics = false;
-		System.out.println("size" + measureAtoms.size());
+		if (this.lyrics.isEmpty()){holdLyrics = true;}
+		System.out.println("size" + measureAtoms.size()+ "contents" + measureAtoms.toString());
 		while (!(this.measureAtoms.isEmpty())){
 			Object atom = this.measureAtoms.poll();
-			String lyric = this.lyrics.poll();
-			if (lyric.equals("|")){
-				holdLyrics = true;
+			if (!(this.lyrics.isEmpty())){
+				lyric = this.lyrics.poll();
+				if (lyric.equals("|")){
+					holdLyrics = true;
+				}
 			}
-			if (atom.equals("|")){
-				piece.addMeasure(m);
+			if (atom.equals("|") || atom.equals("||") 
+					|| atom.equals("[|") || atom.equals( "|]") ||
+							atom.equals(":|") || atom.equals("|:")){
+				if (!(m.isEmpty())){
+					System.out.println("adding this measure to piece" + m);
+					this.piece.addMeasure(m);
+				}
 				m = new Measure();
 			}
-			Chord c = (Chord) this.measureAtoms.poll();
-			if (holdLyrics == false){
-				c.addLyrics(lyric); 
+			else{
+				Chord c = (Chord) atom;
+				if (holdLyrics == false){
+					c.addLyrics(lyric); 
+				}
+				
+				m.addChord(c);		
 			}
-			m.addChord(c);		
 		}
 		System.out.println("this is the measure " + m.toString());
-		piece.addMeasure(m);
+		//piece.addMeasure(m);
 		PieceWalker.walkPiece(piece);
 	}
 
@@ -313,12 +325,14 @@ public class CSTListener implements ABCMusicParserListener{
 					Note note = new Note(pitch, length);
 					chord = new Chord(note.getLength());
 					chord.addAtom(note);
+					System.out.println("added this note:" + ctx.note().noteorrest().pitch().BASENOTE().getText());
 				}
 				if(ctx.note().noteorrest().REST() != null){
 					String expression = ctx.note().noteorrest().REST().getText();
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
 					chord.addAtom(rest);
+					System.out.println("added this note:" + ctx.note().noteorrest().REST().getText());
 				}
 			}
 		}

@@ -119,8 +119,6 @@ public class Chord implements Sequence{
 	 * the cord set the lyrics to its first note
 	 */
 	public void addLyrics(String lyric) {
-		// TODO Auto-generated method stub
-		//this.atoms.get(0).;
-		
+		this.atoms.get(0).setLyrics(lyric);
 	}	
 }
