@@ -5,7 +5,7 @@ import java.util.Map;
 public class Note extends MusicalAtom{
 	
 	private Pitch pitch;
-	private String syllableLyric;
+	//private String syllableLyric;
 	
 	// This will initialize the class with the parse note pitch with the 
 	// length of length
@@ -29,13 +29,13 @@ public class Note extends MusicalAtom{
 	
 	// This attaches a lyric to the note. lyrics will be matched during 
 	// the exitMeasure() method of the listener.
-	public void setLyrics(String syllableLyric){
-		this.syllableLyric = syllableLyric;
-	}
-	
-	public String getLyrics(){
-		return this.syllableLyric;
-	}
+//	public void setLyrics(String syllableLyric){
+//		this.syllableLyric = syllableLyric;
+//	}
+//	
+//	public String getLyrics(){
+//		return this.syllableLyric;
+//	}
 	
 	@Override 
 	public String toString(){

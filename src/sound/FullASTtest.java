@@ -41,6 +41,19 @@ public class FullASTtest {
 		chord = new Chord(new IntPair(1,1)); n = new Note(new Pitch('A'), new IntPair(1,1)); n.setLyrics("D"); chord.addAtom(n); measure.addChord(chord);
 		piece.addMeasure(measure);
 		
+		// The rest bar with lyrics
+		Rest r;
+		measure = new Measure();
+		chord = new Chord(new IntPair(1,1)); 
+		r = new Rest(new IntPair(1,1)); 
+		r.setLyrics("rest"); 
+		chord.addAtom(r); 
+		measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); r = new Rest(new IntPair(1,1)); r.setLyrics("a"); chord.addAtom(r); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); r = new Rest(new IntPair(1,1)); r.setLyrics("rest"); chord.addAtom(r); measure.addChord(chord);
+		chord = new Chord(new IntPair(1,1)); r = new Rest(new IntPair(1,1)); r.setLyrics("finally no rest"); chord.addAtom(r); measure.addChord(chord);
+		piece.addMeasure(measure);
+		
 		// the second bar
 		measure = new Measure();
 		chord = new Chord(new IntPair(1,1)); chord.addAtom(new Note(new Pitch('B'), new IntPair(1,1))); measure.addChord(chord);
