@@ -3,6 +3,7 @@ package sound;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -89,33 +90,60 @@ public class PieceWalkerTest {
 		PieceWalker.walkPiece(amazingGrace);
 	}
 	
-	private void addChordToMeasure(List<Pitch> pitches, IntPair length, Measure m, List<String> lyrics) {
-		for (int i = 0; i < pitches.size(); i++){
-			Pitch pitch = pitches.get(i);
-			Chord c = new Chord(length); c.addAtom(new Note(pitch, length)); 
-			if (!(lyrics.get(i) == null))
-				c.addLyrics(lyrics.get(i));
-			m.addChord(c);
-		}
-//		for (Pitch pitch : pitches){
-//			Chord c = new Chord(length); c.addAtom(new Note(pitch, length)); m.addChord(c);
-//		}	
+	@Test
+	public void chordTest() {
+		Piece chordTest = new Piece(KeySignature.C, 200, "ChordTest", new IntPair(3, 4), new IntPair(1, 8));
+		
+		List<Measure> measures = new ArrayList<Measure>();
+		Measure m;
+		List<Pitch> pitches;
+		
+		// measure 1
+		m = new Measure();
+		measures.add(m);
+		pitches = Arrays.asList(new Pitch('G'), new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		pitches = Arrays.asList(new Pitch('G'), new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		
+		// measure 2
+		m = new Measure();
+		measures.add(m);
+		pitches = Arrays.asList(new Pitch('A'), new Pitch('C'), new Pitch('E'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		pitches = Arrays.asList(new Pitch('A'), new Pitch('C'), new Pitch('E'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		
+		for (Measure meas : measures)
+			chordTest.addMeasure(meas);
+		PieceWalker.walkPiece(chordTest);
 	}
 	
+	private void addChordToMeasure(List<Pitch> pitches, IntPair length, Measure m, String lyrics) {	
+		Chord c = new Chord(length);
+		for (Pitch p : pitches) {
+			c.addAtom(new Note(p, length));
+		}
+		if (!(lyrics == null))
+			c.addLyrics(lyrics);
+		m.addChord(c);
+	}
+	
+	// Helper method, equivalent to addChordToMeasure(), but when there are no lyrics to add
+	private void addChordToMeasure(List<Pitch> pitches, IntPair length, Measure m) {	
+		addChordToMeasure(pitches, length, m, null);
+	}
+	
+	// Helper method, equivalent to addChordToMeasure(), but when there is only 1 pitch in the chord
 	private void addPitchToMeasure(Pitch pitch, IntPair length, Measure m, String lyric) {
 		List<Pitch> pitches = new ArrayList<Pitch>();
-		List<String> lyrics = new ArrayList<String>();
 		pitches.add(pitch);
-		lyrics.add(lyric);
-		addChordToMeasure(pitches, length, m, lyrics);
+		addChordToMeasure(pitches, length, m, lyric);
 	}
 	
+	// Helper method, equivalent to addPitchToMeasure, but with no lyric on the note
 	private void addPitchToMeasure(Pitch pitch, IntPair length, Measure m) {
-		List<Pitch> pitches = new ArrayList<Pitch>();
-		List<String> lyrics = new ArrayList<String>();
-		pitches.add(pitch);
-		lyrics.add(null);
-		addChordToMeasure(pitches, length, m, lyrics);
+		addPitchToMeasure(pitch, length, m, null);
 	}
 
 }
