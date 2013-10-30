@@ -285,8 +285,13 @@ public class CSTListener implements ABCMusicParserListener{
 		}
 		
 		List<NoteelementContext> noteelements = ctx.noteelement();
-		for(NoteelementContext cntxt : noteelements){
-			measureAtoms.add(LyricsListenerHelper.tupletElementHelper(cntxt, this.defaultNoteLength, tupletLength));
+		for(int i =0; i < noteelements.size(); i++){
+			if(i<tupletLength){
+				measureAtoms.add(LyricsListenerHelper.tupletElementHelper(noteelements.get(i), this.defaultNoteLength, tupletLength));
+			}
+			else{
+				measureAtoms.add(LyricsListenerHelper.tupletElementHelper(noteelements.get(i), this.defaultNoteLength, 1));
+			}
 		}
 		
 		
