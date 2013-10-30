@@ -23,14 +23,15 @@ public class PieceWalker {
             	for (Chord sequentialChord : voice){
             		int duration = 0;
             		for(MusicalAtom simulAtom : sequentialChord.getSequence()){
+            			System.out.println(simulAtom.toString());
             			// note length * ticksPerBeat
             			duration = (int) Math.round(simulAtom.getLength().getValue() * ticksPerBeat); // @cr screw up point.
             			if (simulAtom instanceof Note){
             				Note simulNote = (Note) simulAtom;
             				player.addNote(simulNote.getPitch().toMidiNote(), voiceTick, duration);
-            				if (! (simulNote.getLyrics() == null))
-            					player.addLyricEvent(simulNote.getLyrics(), voiceTick);
             			}
+            			if (! (simulAtom.getLyrics() == null))
+        					player.addLyricEvent(simulAtom.getLyrics(), voiceTick);
             		}
             		voiceTick += duration;
             	}

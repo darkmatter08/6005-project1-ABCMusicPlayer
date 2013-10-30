@@ -278,6 +278,7 @@ public class CSTListener implements ABCMusicParserListener{
 			denominator = 4;
 		}
 		
+		List<NoteelementContext> noteelements = ctx.noteelement();
 		
 		
 		
