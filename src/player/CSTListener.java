@@ -21,6 +21,7 @@ import sound.Piece;
 import sound.PieceWalker;
 import sound.Pitch;
 import sound.Rest;
+import sound.VoiceRoadmapUtility;
 import grammar.ABCMusicParser.AbcbodyContext;
 import grammar.ABCMusicParser.AbcheaderContext;
 import grammar.ABCMusicParser.AbctuneContext;
@@ -43,9 +44,9 @@ public class CSTListener implements ABCMusicParserListener{
 	Piece piece;
 	IntPair defaultNoteLength;
 	Queue<String> voices = new LinkedList<String>() ;
-	Queue<String> notes = new LinkedList<String>();
 	Queue<String> lyrics = new LinkedList<String>();
 	Queue<Object> measureAtoms = new LinkedList<Object>();
+	Queue<Object> measuresAndDemarcations = new LinkedList<Object>();
 	
 	@Override
 	public void enterEveryRule(ParserRuleContext arg0) {
@@ -117,8 +118,8 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void exitAbcbody(AbcbodyContext ctx) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("This is the piece before walking: "+this.piece.toString());
+		PieceWalker.walkPiece(this.piece);
 	}
 
 	@Override
@@ -242,7 +243,9 @@ public class CSTListener implements ABCMusicParserListener{
 		Measure m = new Measure();
 		String lyric = null;
 		boolean holdLyrics = false;
-		if (this.lyrics.isEmpty()){holdLyrics = true;}
+		if (this.lyrics.isEmpty()){
+			holdLyrics = true;
+		}
 		System.out.println("size: " + measureAtoms.size()+ "contents: " + measureAtoms.toString());
 		while (!(this.measureAtoms.isEmpty())){
 			Object atom = this.measureAtoms.poll();
@@ -258,7 +261,11 @@ public class CSTListener implements ABCMusicParserListener{
 							atom.toString().equals(":|") || atom.toString().equals("|:")){
 				if (!(m.isEmpty())){
 					System.out.println("adding this measure to piece" + m);
-					this.piece.addMeasure(m);
+					this.measuresAndDemarcations.add(m);
+					if(atom.toString().equals("||") || atom.toString().equals(":|") || atom.toString().equals("|:")){
+						this.measuresAndDemarcations.add(atom);
+					}
+					holdLyrics = false;
 				}
 				m = new Measure();
 			}
@@ -272,9 +279,33 @@ public class CSTListener implements ABCMusicParserListener{
 				m.addChord(c);		
 			}
 		}
-		System.out.println("this is the measure " + m.toString());
-		//piece.addMeasure(m);
-		PieceWalker.walkPiece(piece);
+		System.out.println("measures and Demarcation: "+this.measuresAndDemarcations.toString());
+		VoiceRoadmapUtility linearizer = new VoiceRoadmapUtility();
+		for(Object mORd : this.measuresAndDemarcations){
+			if (mORd instanceof Measure){
+				linearizer.addMeasure((Measure) mORd);
+			}
+			else if (mORd instanceof String){
+				linearizer.addDemarcation((String) mORd);
+			}
+		}
+		List<Measure> linearizedMeasures = linearizer.linearize();
+		System.out.println("Linearized Measure: "+ linearizedMeasures);
+		if(this.voices.size()==0){
+			this.voices.add("Default Voice");
+		}
+		if(this.voices.size()==1){
+			for(Measure measure : linearizedMeasures){
+				piece.addMeasure(this.voices.peek(), measure);
+			}
+		}
+		if(this.voices.size()==2){
+			this.voices.remove();
+			for(Measure measure : linearizedMeasures){
+				piece.addMeasure(this.voices.peek(), measure);
+			}
+		}
+
 	}
 
 	@Override
@@ -285,8 +316,13 @@ public class CSTListener implements ABCMusicParserListener{
 		}
 		
 		List<NoteelementContext> noteelements = ctx.noteelement();
-		for(NoteelementContext cntxt : noteelements){
-			measureAtoms.add(LyricsListenerHelper.tupletElementHelper(cntxt, this.defaultNoteLength, tupletLength));
+		for(int i =0; i < noteelements.size(); i++){
+			if(i<tupletLength){
+				measureAtoms.add(LyricsListenerHelper.tupletElementHelper(noteelements.get(i), this.defaultNoteLength, tupletLength));
+			}
+			else{
+				measureAtoms.add(LyricsListenerHelper.tupletElementHelper(noteelements.get(i), this.defaultNoteLength, 1));
+			}
 		}
 		
 		

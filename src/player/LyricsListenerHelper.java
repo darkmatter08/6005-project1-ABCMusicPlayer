@@ -11,6 +11,7 @@ import sound.Rest;
 import grammar.ABCMusicParser.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,11 +170,41 @@ public class LyricsListenerHelper {
 		return atom;
 	}
 
+//	public static List<String> breakLyrics(String Lyrics) {
+//		List<String> lyricList = new ArrayList<String>();
+//		Lyrics = Lyrics.replace("*", "- -");
+//		System.out.println("Before split: " + Lyrics);
+//		String[] lyricArray = Lyrics.split("\\s|\\-");
+//		System.out.println("After split: " + Arrays.deepToString(lyricArray));
+//		for (String syllable : lyricArray) {
+//			if (syllable.indexOf('_') != -1) {
+//				while (syllable.indexOf('_') != -1) {
+//					syllable = syllable.replaceAll("_",
+//							"-" + syllable.substring(0, syllable.indexOf('_')));
+//				}
+//				String[] repeatedSyllables = syllable.split("-");
+//				for (String repeatedSyllable : repeatedSyllables) {
+//					lyricList.add(repeatedSyllable);
+//				}
+//			} else {
+//				lyricList.add(syllable);
+//			}
+//		}
+//		return lyricList;
+//
+//	}
+
 	public static List<String> breakLyrics(String Lyrics) {
 		List<String> lyricList = new ArrayList<String>();
-		Lyrics = Lyrics.replace("*", "- -");
-		String[] lyricArray = Lyrics.split("\\s|\\-");
-
+		Lyrics = Lyrics.replace("\\-", "19827340981273409");
+		System.out.println("Before split: " + Lyrics);
+		String[] lyricArray = Lyrics.split("\\-");
+		System.out.println("After split: " + Arrays.deepToString(lyricArray));
+		String regex = "[' ']*(19827340981273409)[' ']*";
+		for(String s : lyricArray){
+			s.replaceAll(regex, "-");
+		}
+		System.out.println("After After split: " + Arrays.deepToString(lyricArray));
 		for (String syllable : lyricArray) {
 			if (syllable.indexOf('_') != -1) {
 				while (syllable.indexOf('_') != -1) {
@@ -191,7 +222,6 @@ public class LyricsListenerHelper {
 		return lyricList;
 
 	}
-	
 	public static Chord tupletElementHelper(NoteelementContext ctx, IntPair defaultLength, int tupletSpec) {
 		Chord chord = null;
 		int tupletNumerator = 0;
