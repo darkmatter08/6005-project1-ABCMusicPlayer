@@ -14,9 +14,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import sound.Chord;
 import sound.IntPair;
 import sound.KeySignature;
+import sound.Measure;
 import sound.MusicalAtom;
 import sound.Note;
 import sound.Piece;
+import sound.PieceWalker;
 import sound.Pitch;
 import sound.Rest;
 import grammar.ABCMusicParser.AbcbodyContext;
@@ -196,7 +198,7 @@ public class CSTListener implements ABCMusicParserListener{
 			defaultLength = new IntPair(num, denom);
 		}
 		
-		Piece piece = new Piece(Key, tempo, title, meter, defaultLength);
+		this.piece = new Piece(Key, tempo, title, meter, defaultLength);
 		
 	}
 
@@ -222,7 +224,15 @@ public class CSTListener implements ABCMusicParserListener{
 	public void exitBodysection(BodysectionContext ctx) {
 		// TODO Auto-generated method stub
 		// Ideally the stacks should be processed here and new the bulk of the AST building performed
-		
+		Measure m = new Measure();
+		System.out.println("size" + measureAtoms.size());
+		while (!(this.measureAtoms.isEmpty())){
+			Chord c = (Chord) this.measureAtoms.poll();
+			m.addChord(c);		
+		}
+		System.out.println("this is the measure " + m.toString());
+		piece.addMeasure(m);
+		PieceWalker.walkPiece(piece);
 	}
 
 	@Override
@@ -284,11 +294,13 @@ public class CSTListener implements ABCMusicParserListener{
 					pitch.octaveTranspose(octaves);
 					Note note = new Note(pitch, length);
 					chord = new Chord(note.getLength());
+					chord.addAtom(note);
 				}
 				if(ctx.note().noteorrest().REST() != null){
 					String expression = ctx.note().noteorrest().REST().getText();
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
+					chord.addAtom(rest);
 				}
 			}
 		}

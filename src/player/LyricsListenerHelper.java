@@ -19,50 +19,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LyricsListenerHelper {
-//	public static List<Measure> addNotesToLyrics(Queue<ElementContext> notes,
-//			Queue<String> lyrics, Piece piece) {
-//		List<Measure> measures = new ArrayList<Measure>();
-//		Measure m = new Measure();
-//		Chord chord;
-//		ElementContext note = notes.poll();
-//		String syllableLyric = lyrics.poll();
-//		while (!(note.getText().contains("|"))) {
-//			Map<Integer, String> accidentalsMap = new HashMap<Integer, String>();
-//			IntPair length;
-//			// if we have a single note
-//			if (note.noteelement().multinote() == null) {
-//				// check if it has a length
-//				if (note.noteelement().note().notelength() != null) {
-//					length = noteGetPair(note.noteelement().note().notelength()
-//							.getText());
-//				} else {
-//					length = piece.getDefaultLength();
-//				}
-//
-//				// check for accidentals and octaves
-//				// if (note.noteelement().note().noteorrest().pitch() != null){
-//				String expression = note.noteelement().note().noteorrest().pitch().BASENOTE().getText();
-//				int octaves = noteGetOctaves(note.noteelement().note().noteorrest().pitch().OCTAVE().getText());
-//				if (expression.matches("[c|d|e|f|g|a|b]")) {
-//					octaves += -1;
-//				}
-//
-//				String accidentals = noteGetAccidental(expression);
-//
-//				Pitch pitch = new Pitch(noteGetPitch(expression));
-//				accidentalsMap.put(pitch.toMidiNote(), accidentals);
-//
-//				Note chordNote = new Note(pitch, length);
-//
-//				// chordNote.setAccidental(accidentalsMap);
-//				chordNote.setLyrics(syllableLyric);
-//				chord = new Chord(length);
-//				chord.addAtom(chordNote);
-//			}
-//		}
-//		return measures;
-//
-//	}
+	
+	public static IntPair noteGetLength(NotelengthContext ctx) {
+		if (ctx.getChildCount() == 1){
+			if (ctx.FRACTIONBAR() != null){
+				return new IntPair(1, 2);
+			}
+			int num = Integer.parseInt(ctx.getChild(0).getText());
+			return new IntPair(num, 2);
+		}
+		else{
+			if (ctx.getChildCount() == 3){
+				int num = Integer.parseInt(ctx.getChild(0).getText());
+				int denom = Integer.parseInt(ctx.getChild(2).getText());
+				return new IntPair(num, denom);
+				}
+		
+			else{
+				if (ctx.getChild(0).getText().equals("/")){
+					int denom = Integer.parseInt(ctx.getChild(1).getText());
+					return new IntPair(1, denom);
+				}
+				else{
+					int num = Integer.parseInt(ctx.getChild(0).getText());
+					return new IntPair(num, 2);
+				}
+			}
+		}
+	}
 
 	public static IntPair getPair(String expression) {
 		Pattern pattern = Pattern.compile("(.+?)(\\d+)/(\\d+)(.+?)");
@@ -75,13 +59,6 @@ public class LyricsListenerHelper {
 		return p;
 	}
 
-	public static String noteGetAccidental(String expression) {
-		Pattern pattern = Pattern
-				.compile("(.+?)([C|D|E|F|G|A|B|c|d|e|f|g|a|b])");
-		Matcher matcher = pattern.matcher(expression);
-		matcher.matches();
-		return matcher.group(1).toString();
-	}
 
 	public static char noteGetPitch(String expression) {
 		return expression.toUpperCase().charAt(0);
@@ -161,8 +138,8 @@ public class LyricsListenerHelper {
 		if (ctx != null) {
 			IntPair length;
 			if (ctx.notelength() != null) {
-				String expression = ctx.notelength().getText();
-				length = LyricsListenerHelper.noteGetPair(expression);
+				//String expression = ctx.notelength().getText();
+				length = LyricsListenerHelper.noteGetLength(ctx.notelength());
 			} else {
 				length = new IntPair(1, 1);
 			}
@@ -170,14 +147,13 @@ public class LyricsListenerHelper {
 			if (ctx.noteorrest() != null) {
 				if (ctx.noteorrest().pitch() != null) {
 					String expression = ctx.noteorrest().pitch().getText();
-					String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
+					//String accidentals = LyricsListenerHelper.noteGetAccidental(expression);
 					int octaves = LyricsListenerHelper.noteGetOctaves(ctx.noteorrest().pitch());
 					Pitch pitch = new Pitch(
 							LyricsListenerHelper.noteGetPitch(expression));
 					pitch.octaveTranspose(octaves);
 					Note note = new Note(pitch, length);
 					return note;
-
 				}
 				if (ctx.noteorrest().REST() != null) {
 					String expression = ctx.noteorrest().REST().getText();
