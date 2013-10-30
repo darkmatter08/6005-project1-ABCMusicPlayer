@@ -119,6 +119,230 @@ public class PieceWalkerTest {
 		PieceWalker.walkPiece(chordTest);
 	}
 	
+	@Test
+	public void pitchesDifferentVoicesTest() {
+		Piece chordTest = new Piece(KeySignature.C, 50, "ChordTest", new IntPair(3, 4), new IntPair(1, 8));
+		
+		// VOICE 1
+		
+		List<Measure> voice1 = new ArrayList<Measure>();
+		Measure m;
+		List<Pitch> pitches;
+		
+		// measure 1
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('G'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('G'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(1, 1), m);
+		
+		// VOICE 2
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		
+		List<Measure> voice2 = new ArrayList<Measure>();
+		
+		// measure 1
+		m = new Measure();
+		voice2.add(m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		
+		// measure 2
+		m = new Measure();
+		voice2.add(m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('F'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('F'), new IntPair(1, 1), m);
+		
+		for (Measure meas : voice1)
+			chordTest.addMeasure("voice1", meas);
+		for (Measure meas : voice2)
+			chordTest.addMeasure("voice2", meas);
+		
+		PieceWalker.walkPiece(chordTest);
+	}
+	
+	@Test
+	public void chordsDifferentVoicesTest() {
+		Piece chordTest = new Piece(KeySignature.C, 50, "ChordTest", new IntPair(3, 4), new IntPair(1, 8));
+		
+		// VOICE 1
+		
+		List<Measure> voice1 = new ArrayList<Measure>();
+		Measure m;
+		List<Pitch> pitches;
+		
+		// measure 1
+		m = new Measure();
+		voice1.add(m);
+		pitches = Arrays.asList(new Pitch('G'), new Pitch('B'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1,1), m);
+		pitches = Arrays.asList(new Pitch('A'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1,1), m);
+		
+		// VOICE 2
+		m = new Measure();
+		voice1.add(m);
+		addRestToMeasure(new IntPair(1,1), m);
+		pitches = Arrays.asList(new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1,1), m);
+		pitches = Arrays.asList(new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		
+		List<Measure> voice2 = new ArrayList<Measure>();
+		
+		// measure 1
+		m = new Measure();
+		voice2.add(m);
+		addRestToMeasure(new IntPair(1,1), m);
+		pitches = Arrays.asList(new Pitch('G'), new Pitch('B'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1,1), m);
+		pitches = Arrays.asList(new Pitch('A'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(1, 1), m);
+		
+		// measure 2
+		m = new Measure();
+		voice2.add(m);
+		pitches = Arrays.asList(new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(2, 1), m, "long note");
+		pitches = Arrays.asList(new Pitch('B'), new Pitch('D'));
+		addChordToMeasure(pitches, new IntPair(2, 1), m, "long note");
+		
+		for (Measure meas : voice1)
+			chordTest.addMeasure("voice1", meas);
+		for (Measure meas : voice2)
+			chordTest.addMeasure("voice2", meas);
+		
+		PieceWalker.walkPiece(chordTest);
+	}
+	
+	@Test
+	public void furElseTest() {
+		/**
+		 * X: 1
+		 * T:Bagatelle No.25 in A, WoO.59
+		 * C:Ludwig van Beethoven
+		 * V:1
+		 * V:2
+		 * M:3/8
+		 * L:1/16
+		 * Q:1/8=140
+		 * 
+		 * V:1
+		 * e^d|e^deB=dc|A2 z CEA|B2 z E^GB|c2 z Ee^d|
+		 * V:2
+		 * z2|z6|A,,E,A, z z2|E,,E,^G, z z2|A,,E,A, z z2|
+		 */
+		
+		Piece chordTest = new Piece(KeySignature.C, 50, "ChordTest", new IntPair(3, 4), new IntPair(1, 8));
+		
+		// VOICE 1
+		
+		List<Measure> voice1 = new ArrayList<Measure>();
+		Measure m;
+		List<Pitch> pitches;
+		
+		// measure 1
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1, 1), m);
+		
+		// measure 2
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('D'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('C'), new IntPair(1,1), m);
+		
+		// measure 3
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(2,1), m);
+		addRestToMeasure(new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('C'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(1,1), m);
+		
+		// measure 4
+		m = new Measure();
+		voice1.add(m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(2,1), m);
+		addRestToMeasure(new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('G'), new IntPair(1,1), m);
+		addPitchToMeasure(new Pitch('B'), new IntPair(1,1), m);
+		
+		// VOICE 2
+		/* V:2
+		 * z2|z6|A,,E,A, z z2|E,,E,^G, z z2|A,,E,A, z z2|
+		 */
+		
+		List<Measure> voice2 = new ArrayList<Measure>();
+		
+		// measure 1
+		m = new Measure();
+		voice2.add(m);
+		addRestToMeasure(new IntPair(2,1), m);
+		
+		// measure 2
+		m = new Measure();
+		voice2.add(m);
+		addRestToMeasure(new IntPair(6, 1), m);
+		
+		// measure 3
+		m = new Measure();
+		voice2.add(m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('A'), new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1 ,1), m);
+		addRestToMeasure(new IntPair(2 ,1), m);
+		
+		// measure 4
+		m = new Measure();
+		voice2.add(m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('E'), new IntPair(1, 1), m);
+		addPitchToMeasure(new Pitch('G'), new IntPair(1, 1), m);
+		addRestToMeasure(new IntPair(1 ,1), m);
+		addRestToMeasure(new IntPair(2 ,1), m);
+		
+		for (Measure meas : voice1)
+			chordTest.addMeasure("voice1", meas);
+		for (Measure meas : voice2)
+			chordTest.addMeasure("voice2", meas);
+		
+		PieceWalker.walkPiece(chordTest);
+	}
+	
+	private void addRestToMeasure(IntPair length, Measure m, String lyrics) {
+		Chord c = new Chord(length); Rest r = new Rest(length); 
+		if (!(lyrics == null))
+			r.setLyrics(lyrics); 
+		c.addAtom(r); m.addChord(c);
+	}
+	
+	private void addRestToMeasure(IntPair length, Measure m) {
+		addRestToMeasure(length, m, null);
+	}
+	
 	private void addChordToMeasure(List<Pitch> pitches, IntPair length, Measure m, String lyrics) {	
 		Chord c = new Chord(length);
 		for (Pitch p : pitches) {

@@ -48,12 +48,12 @@ public class VoiceRoadmapUtilityTest {
 		chord = new Chord(new IntPair(2,1)); chord.addAtom(new Note(new Pitch('D'), new IntPair(2,1)));	measure.addChord(chord);
 		util.addMeasure(measure);
 		
+		util.addDemarcation(VoiceRoadmapUtility.DB);
+		
 		Piece piece = new Piece(KeySignature.D, 100, "Alphabet Song", new IntPair(4, 4), new IntPair(1, 1));
 		
 		List<Measure> linearPiece = util.linearize();
-		System.out.println("========SJ===========");
-		System.out.println(linearPiece.toString());
-		
+
 		for (Measure linearMeas : linearPiece) {
 			piece.addMeasure(linearMeas);
 		}
@@ -163,8 +163,6 @@ public class VoiceRoadmapUtilityTest {
 		Piece piece = new Piece(KeySignature.D, 100, "Alphabet Song", new IntPair(4, 4), new IntPair(1, 1));
 		
 		List<Measure> linearPiece = util.linearize();
-		System.out.println("========SJ===========");
-		System.out.println(linearPiece.toString());
 		
 		for (Measure linearMeas : linearPiece) {
 			piece.addMeasure(linearMeas);
@@ -223,8 +221,6 @@ public class VoiceRoadmapUtilityTest {
 		Piece piece = new Piece(KeySignature.D, 100, "Alphabet Song", new IntPair(4, 4), new IntPair(1, 1));
 		
 		List<Measure> linearPiece = util.linearize();
-		System.out.println("========SJ===========");
-		System.out.println(linearPiece.toString());
 		
 		for (Measure linearMeas : linearPiece) {
 			piece.addMeasure(linearMeas);
@@ -280,8 +276,8 @@ public class VoiceRoadmapUtilityTest {
 		Piece piece = new Piece(KeySignature.D, 100, "Alphabet Song", new IntPair(4, 4), new IntPair(1, 1));
 		
 		List<Measure> linearPiece = util.linearize();
-		System.out.println("========SJ===========");
-		System.out.println(linearPiece.toString());
+//		System.out.println("========SJ===========");
+//		System.out.println(linearPiece.toString());
 		
 		for (Measure linearMeas : linearPiece) {
 			piece.addMeasure(linearMeas);
