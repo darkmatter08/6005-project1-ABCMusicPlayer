@@ -43,5 +43,13 @@ public class LyricListenerTest {
 		assertEquals(42, p.numerator);
 		assertEquals(1, p.denominator);	
 	}
+	
+	@Test
+	public void testLyricBreak(){
+		String Lyric = "dog___ dog~eat~cat i-eat-cow";
+		List<String> Syllables = LyricsListenerHelper.breakLyrics(Lyric);
+		assertEquals("[dog, dog, dog, dog, dog~eat~cat, i, eat, cow]", 
+				Syllables.toString());
+	}
 }
 
