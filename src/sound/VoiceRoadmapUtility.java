@@ -100,13 +100,14 @@ public class VoiceRoadmapUtility {
 					movePointerToBeginningOfRepeatSection();
 					System.out.println("back to start of repeat section " + pointer);
 					System.out.println("mulending " + inMulEnding);
-					
+					pointer--; // counteracts the effect of incrementing the pointer afterwards
 				}
 				
 				else if (nextStr.equals(SE)) { /* Skip second ending demarcator */ }
 				
 				else if (nextStr.equals(FE)) {
 					delete();
+					pointer--;
 					inMulEnding = true;
 				}
 				
@@ -142,7 +143,9 @@ public class VoiceRoadmapUtility {
 	}
 	
 	private void changeTo(Object o){
+		System.out.println(queue.get(pointer));
 		queue.set(pointer, o);
+		System.out.println(queue.get(pointer));
 	}
 	
 	/**
