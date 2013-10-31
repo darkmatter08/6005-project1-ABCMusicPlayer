@@ -97,9 +97,7 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void exitAbcbody(AbcbodyContext ctx) {
-	//System.out.println("This is the piece before walking: "+this.piece.toString());
 		PieceWalker.walkPiece(this.piece);
-		System.out.println("The total voices: "+ this.tempList);
 	}
 
 
@@ -118,7 +116,6 @@ public class CSTListener implements ABCMusicParserListener{
 		if (ctx.VOICEBODY() != null) {
 			String voiceStr = ctx.VOICEBODY().getText().replace("\n", "").substring(2);
 			this.voices.add(voiceStr);
-			System.out.println("Added voice: "+ voiceStr);
 		}
 	}
 
@@ -146,7 +143,6 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterAbcheader(AbcheaderContext ctx) {
-		// @cr we will need to make sure the grammar handles whitespace correctly in these fields
 		String title = ctx.TITLE().toString().substring(2).replace("\n", "");
 		KeySignature Key = KeySignature.valueOf(ctx.KEY().toString().substring(2).replace("\n", ""));
 		
@@ -155,29 +151,16 @@ public class CSTListener implements ABCMusicParserListener{
 		if (ctx.optionalfields().TEMPO() != null){
 			String tempoStr = ctx.optionalfields().TEMPO().get(0).toString();
 			tempo = Integer.parseInt(tempoStr.substring(6).replace("\n", ""));
-			//System.out.print("header tempo" + ctx.optionalfields().TEMPO().get(0).toString());
 			IntPair tempoPair = LyricsListenerHelper.getPair(ctx.optionalfields().TEMPO().get(0).
 					toString().replaceAll(" ", "").replaceAll("\n", ""));
 			tempo = (int)(tempo * tempoPair.getValue());
-			
-			//System.out.print(tempoPair.numerator + "<=,=> "+ tempoPair.denominator);
 		}
-		
-		// set the default meter to 4/4 as default. Change if specified.
-		IntPair meter = new IntPair(4, 4);
-//		if (ctx.optionalfields().METER() != null){
-//			try{
-//			int num = Integer.parseInt(ctx.optionalfields().METER().get(0).toString().substring(2,3));
-//			int denom = Integer.parseInt(ctx.optionalfields().METER().get(0).toString().substring(4,5));
-//			meter = new IntPair(num, denom);
-//			}
-//			catch (NumberFormatException){
-//				if (ctx.optionalfields().METER().get(0).getText().equals("C\n")){
-//					meter
-//				}
-//			}
-//		}
-		
+		IntPair meter = new IntPair(4,4);
+		if(ctx.optionalfields().METER() != null){
+			int meterNum = Integer.parseInt(ctx.optionalfields().METER().get(0).toString().substring(2,3));
+			int meterDenom = Integer.parseInt(ctx.optionalfields().METER().get(0).toString().substring(4,5));
+			meter = new IntPair(meterNum, meterDenom);
+		}
 		if (ctx.optionalfields().LENGTH() != null && ctx.optionalfields().LENGTH().size() > 0){
 			int num = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(2,3));
 			int denom = Integer.parseInt(ctx.optionalfields().LENGTH().get(0).toString().substring(4,5));
@@ -192,7 +175,7 @@ public class CSTListener implements ABCMusicParserListener{
 			}
 		}
 		
-		this.piece = new Piece(Key, 4000 , title, meter, this.defaultNoteLength);
+		this.piece = new Piece(Key, tempo , title, meter, this.defaultNoteLength);
 		
 	}
 
@@ -210,12 +193,10 @@ public class CSTListener implements ABCMusicParserListener{
 
 	@Override
 	public void enterBodysection(BodysectionContext ctx) {
-		//System.out.println("scanning lyrics");
 		if (ctx.LYRIC() != null){
 			for (String lyric : LyricsListenerHelper.breakLyrics(ctx.LYRIC().getText().substring(2))){
 				this.lyrics.add(lyric);
 			}
-			//System.out.println("put the lyrics on the stack:" + LyricsListenerHelper.breakLyrics(ctx.LYRIC().getText().toString().substring(2)));
 		}
 	}
 
@@ -241,7 +222,6 @@ public class CSTListener implements ABCMusicParserListener{
 			}
 		}
 
-		System.out.println("measures and Demarcation: "+this.measuresAndDemarcations.toString());
 		VoiceRoadmapUtility linearizer = new VoiceRoadmapUtility();
 		for(Object mORd : this.measuresAndDemarcations){
 			if (mORd instanceof Measure){
@@ -252,7 +232,6 @@ public class CSTListener implements ABCMusicParserListener{
 			}
 		}
 		List<Measure> linearizedMeasures = linearizer.linearize();
-		System.out.println("Linearized Measure: "+ linearizedMeasures);
 		if(this.voices.size()==0){
 			this.voices.add("Default Voice");
 		}
@@ -298,7 +277,6 @@ public class CSTListener implements ABCMusicParserListener{
 	@Override
 	public void enterNoteelement(NoteelementContext ctx) {
 		Chord chord = null;
-		System.out.print("this is the ctx of :" + ctx.getText());
 		if (ctx.note() != null){
 			IntPair length;
 			if (ctx.note().notelength().getChildCount() != 0){
@@ -321,13 +299,11 @@ public class CSTListener implements ABCMusicParserListener{
 					Note note = new Note(p, length);
 					chord = new Chord(note.getLength());
 					chord.addAtom(note);
-					//System.out.println("added this note:" + ctx.note().noteorrest().pitch().BASENOTE().getText() + note.getLength().getValue());
 				}
 				if(ctx.note().noteorrest().REST() != null){
 					Rest rest = new Rest(length);
 					chord = new Chord(rest.getLength());
 					chord.addAtom(rest);
-					//System.out.println("added this rest:" + ctx.note().noteorrest().REST().getText() + rest.getLength().getValue());
 				}
 			}
 		}

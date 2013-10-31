@@ -35,7 +35,6 @@ public class VoiceRoadmapUtility {
 	 */
 	public void addMeasure(Measure m) {
 		queue.add(m);
-		//System.out.println("ADDED MEASURE" + m.toString());
 	}
 	
 	/**
@@ -53,7 +52,6 @@ public class VoiceRoadmapUtility {
 		assert demarcation.equals(BR) || demarcation.equals(FR) || demarcation.equals(FE) 
 			|| demarcation.equals(SE) || demarcation.equals(DB);
 		queue.add(demarcation);
-		//System.out.println("ADDED DEMARCATION" + queue.toString());
 	}
 	
 	/**
@@ -76,8 +74,6 @@ public class VoiceRoadmapUtility {
 			else
 				next = peek();
 			
-			//System.out.println("Element: " + next.toString() + " Pointer: " + pointer);
-			
 			
 			if (next instanceof Measure){
 				linearTune.add((Measure) next);
@@ -92,14 +88,9 @@ public class VoiceRoadmapUtility {
 					if (inMulEnding)
 						inMulEnding = false;
 					else{
-						System.out.println("Pre change: "+ queue.get(pointer));
 						changeTo(FR);
-						System.out.println("post change: "+ queue.get(pointer));
 					}
-					System.out.println("pre move pointer " + pointer);
 					movePointerToBeginningOfRepeatSection();
-					System.out.println("back to start of repeat section " + pointer);
-					System.out.println("mulending " + inMulEnding);
 					pointer--; // counteracts the effect of incrementing the pointer afterwards
 				}
 				
@@ -143,9 +134,7 @@ public class VoiceRoadmapUtility {
 	}
 	
 	private void changeTo(Object o){
-		System.out.println(queue.get(pointer));
 		queue.set(pointer, o);
-		System.out.println(queue.get(pointer));
 	}
 	
 	/**
@@ -171,14 +160,6 @@ public class VoiceRoadmapUtility {
 	}
 	
 	public String toString() {
-//		String s = "";
-//		for (Object a : queue) {
-//			if (a instanceof Measure)
-//				s += a.toString();
-//			else
-//				s += (String) a;
-//		}
-//		return s;
 		return queue.toString();
 	}
 }

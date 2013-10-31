@@ -38,16 +38,5 @@ public class LyricListenerTest {
 		assertEquals(42, p.numerator);
 		assertEquals(1, p.denominator);	
 	}
-	
-	@Test
-	public void testLyricBreak(){
-		String Lyric = "A \\- ma - \\- zing | grace! How sweet the sound That saved a_ wretch like me._";
-		List<String> Syllables = LyricsListenerHelper.breakLyrics(Lyric);
-		System.out.println(Lyric);
-		System.out.println(Syllables.toString());
-		assertEquals("[A, -, ma, , , , -, , zing, |, grace!, How, sweet, the ,sound, That, saved, a, , wretch, like, me]", 
-				Syllables.toString());
-		
-	}
 }
 

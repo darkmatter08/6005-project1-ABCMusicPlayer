@@ -23,7 +23,6 @@ public class PieceWalker {
             	for (Chord sequentialChord : voice){
             		int duration = 0;
             		for(MusicalAtom simulAtom : sequentialChord.getSequence()){
-            			//System.out.println(simulAtom.toString());
             			// note length * ticksPerBeat
             			duration = (int) Math.round(simulAtom.getLength().getValue() * ticksPerBeat); // @cr screw up point.
             			if (simulAtom instanceof Note){
@@ -36,7 +35,7 @@ public class PieceWalker {
             		voiceTick += duration;
             	}
             }
-            //System.out.println(player);
+            System.out.println(player);
             player.play();
 
         } catch (MidiUnavailableException e) {

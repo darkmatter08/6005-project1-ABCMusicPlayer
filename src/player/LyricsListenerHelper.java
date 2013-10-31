@@ -55,8 +55,6 @@ public class LyricsListenerHelper {
 
 	public static List<Object> attachLyrics(Queue<?> lyrics, Queue<?> measureAtoms){
 		List<Object> measureList = new ArrayList<Object>();
-		System.out.println("===========Lyrics=========");
-		System.out.println("this is the measure atoms" + measureAtoms.toString());
 		if (measureAtoms.isEmpty()){
 			return measureList;
 		}
@@ -98,8 +96,6 @@ public class LyricsListenerHelper {
 			
 		}
 		
-		System.out.println("this is the map measure" + mapMeasure.toString());
-
 		List<Object> lyricslist = new ArrayList<Object>();
 		i =0;
 		while (!(lyrics.isEmpty())){
@@ -145,15 +141,10 @@ public class LyricsListenerHelper {
 			
 		}
 		mapLyrics.add(lyricslist);
-		System.out.println("these are the lyrics"+ lyrics);
-		System.out.println("this is the map lyrics" + mapLyrics.toString());
-		
 		for(i = 0; i < mapMeasure.size(); i++){
 			for (int j = 0; j< mapMeasure.get(i).size(); j ++){
 				if (i < mapLyrics.size() && j < mapLyrics.get(i).size() ){
 				((Chord) (mapMeasure.get(i).get(j))).addLyrics(((String) (mapLyrics.get(i).get(j))));
-				System.out.println("for chord" + ((Chord) (mapMeasure.get(i).get(j))).toString() + 
-						"added lyric" + ((String) (mapLyrics.get(i).get(j))));
 				}
 			}
 		}
@@ -331,34 +322,6 @@ public class LyricsListenerHelper {
 
 	}
 
-//	public static List<String> breakLyrics(String Lyrics) {
-//		List<String> lyricList = new ArrayList<String>();
-//		Lyrics = Lyrics.replace("\\-", "19827340981273409");
-//		System.out.println("Before split: " + Lyrics);
-//		String[] lyricArray = Lyrics.split("\\-");
-//		System.out.println("After split: " + Arrays.deepToString(lyricArray));
-//		String regex = "[' ']*(19827340981273409)[' ']*";
-//		for(String s : lyricArray){
-//			s.replaceAll(regex, "-");
-//		}
-//		System.out.println("After After split: " + Arrays.deepToString(lyricArray));
-//		for (String syllable : lyricArray) {
-//			if (syllable.indexOf('_') != -1) {
-//				while (syllable.indexOf('_') != -1) {
-//					syllable = syllable.replaceAll("_",
-//							"-" + syllable.substring(0, syllable.indexOf('_')));
-//				}
-//				String[] repeatedSyllables = syllable.split("-");
-//				for (String repeatedSyllable : repeatedSyllables) {
-//					lyricList.add(repeatedSyllable);
-//				}
-//			} else {
-//				lyricList.add(syllable);
-//			}
-//		}
-//		return lyricList;
-//
-//	}
 	public static Chord tupletElementHelper(NoteelementContext ctx, IntPair defaultLength, int tupletSpec) {
 		Chord chord = null;
 		int tupletNumerator = 0;
