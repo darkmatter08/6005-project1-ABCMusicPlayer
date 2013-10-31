@@ -9,12 +9,6 @@ import sound.IntPair;
 
 public class LyricListenerTest {
 	@Test
-	public void testFractions(){
-		IntPair p = LyricsListenerHelper.getPair("Q:1/4=100");
-		assertEquals(19443, p.numerator);
-		assertEquals(2245234, p.denominator);	
-		}
-	@Test
 	public void testPair(){
 		IntPair p = LyricsListenerHelper.noteGetPair("/2245234");
 		assertEquals(1, p.numerator);
